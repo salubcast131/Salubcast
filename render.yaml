@@ -1,0 +1,60 @@
+services:
+  - type: web
+    name: salubcast
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT wsgi:app
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: SALUBCAST_SESSION_SECURE
+        value: "1"
+      - key: SALUBCAST_PREFERRED_URL_SCHEME
+        value: https
+      - key: SALUBCAST_PROXY_FIX_FOR
+        value: "1"
+      - key: SALUBCAST_PROXY_FIX_PROTO
+        value: "1"
+      - key: SALUBCAST_PROXY_FIX_HOST
+        value: "1"
+      - key: SALUBCAST_PROXY_FIX_PORT
+        value: "1"
+      - key: SALUBCAST_DATA_DIR
+        value: /var/data/salubcast
+      - key: SALUBCAST_UPLOAD_DIR
+        value: /var/data/salubcast/uploads_clean
+      - key: SALUBCAST_DB_PATH
+        value: /var/data/salubcast/salubcast_v4_clean.db
+      - key: SALUBCAST_DEFAULT_TRIAL_DAYS
+        value: "14"
+      - key: SALUBCAST_SECRET
+        generateValue: true
+      - key: SALUBCAST_HEALTH_TOKEN
+        generateValue: true
+      - key: SALUBCAST_BOOTSTRAP_ADMIN_PASSWORD
+        sync: false
+      - key: SALUBCAST_BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: SALUBCAST_BOOTSTRAP_ADMIN_NAME
+        sync: false
+      - key: SALUBCAST_PUBLIC_BASE_URL
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_STARTER
+        sync: false
+      - key: STRIPE_PRICE_PROFESSIONAL
+        sync: false
+      - key: STRIPE_PRICE_ENTERPRISE
+        sync: false
+      - key: STRIPE_PORTAL_CONFIGURATION_ID
+        sync: false
+    disks:
+      - name: salubcast-data
+        mountPath: /var/data/salubcast
+        sizeGB: 10
