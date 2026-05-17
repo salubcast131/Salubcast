@@ -1,6 +1,0 @@
-
-> salubcast-bolt@1.0.0 start
-> node src/server.js
-
-[SalubCast] Node app listening on 5000
-[SalubCast] startup checks passed
