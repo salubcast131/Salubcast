@@ -28,6 +28,12 @@ services:
         value: /var/data/salubcast/uploads_clean
       - key: SALUBCAST_DB_PATH
         value: /var/data/salubcast/salubcast_v4_clean.db
+      - key: SUPABASE_DB_URL
+        sync: false
+      - key: SUPABASE_PROJECT_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
       - key: SALUBCAST_DEFAULT_TRIAL_DAYS
         value: "14"
       - key: SALUBCAST_SECRET

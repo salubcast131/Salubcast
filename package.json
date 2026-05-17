@@ -1,0 +1,26 @@
+{
+  "name": "salubcast-bolt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SalubCast rebuilt as a Bolt-compatible Node/Express app.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.4.5",
+    "archiver": "^7.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mime-types": "^2.1.35",
+    "multer": "^2.1.1",
+    "pg": "^8.13.1",
+    "rss-parser": "^3.13.0",
+    "uuid": "^11.0.5"
+  }
+}

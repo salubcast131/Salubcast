@@ -1,0 +1,3 @@
+[SalubCast] No bootstrap admin created. Set SALUBCAST_BOOTSTRAP_ADMIN_PASSWORD to seed one safely.
+ * Serving Flask app 'salubcast_app.shared'
+ * Debug mode: off
