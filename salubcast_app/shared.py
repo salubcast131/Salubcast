@@ -221,12 +221,16 @@ def validate_upload_file(file_storage) -> tuple[bool, str]:
     filename = file_storage.filename or ""
     if not allowed_file(filename):
         return False, "Bestandstype niet toegestaan."
-    content_type = (file_storage.mimetype or "").lower()
+    content_type = (file_storage.mimetype or "").strip().lower()
     guessed, _ = mimetypes.guess_type(filename)
-    if content_type and not (content_type.startswith("image/") or content_type.startswith("video/") or content_type == "application/pdf"):
-        return False, "Bestand heeft geen geldig content-type."
-    if guessed and not (guessed.startswith("image/") or guessed.startswith("video/") or guessed == "application/pdf"):
+    guessed = (guessed or get_mimetype(filename) or "").lower()
+    valid_guessed = guessed.startswith("image/") or guessed.startswith("video/") or guessed == "application/pdf"
+    generic_content_types = {"", "application/octet-stream", "binary/octet-stream", "application/x-empty"}
+    valid_content = content_type.startswith("image/") or content_type.startswith("video/") or content_type == "application/pdf"
+    if not valid_guessed:
         return False, "Bestandsnaam/extensie matcht geen geldig mediatype."
+    if content_type not in generic_content_types and not valid_content:
+        return False, "Bestand heeft geen geldig content-type."
     return True, ""
 
 

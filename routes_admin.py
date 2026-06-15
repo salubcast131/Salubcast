@@ -923,10 +923,18 @@ def media_library() -> str:
             return redirect(url_for("media_library"))
         safe_name = secure_filename(file.filename)
         unique_name = f"{uuid.uuid4()}_{safe_name}"
-        file.save(UPLOAD_DIR / unique_name)
-        media_id = str(uuid.uuid4())
-        execute("INSERT INTO media (id, company_id, title, filename, mimetype, duration_seconds, uploaded_at) VALUES (?, ?, ?, ?, ?, ?, ?)", (media_id, company_id, title, unique_name, get_mimetype(safe_name), duration, now_iso()))
-        log_event(actor_label(), "media_uploaded", "media", media_id, title, company_id)
+        try:
+            file.save(UPLOAD_DIR / unique_name)
+            media_id = str(uuid.uuid4())
+            execute("INSERT INTO media (id, company_id, title, filename, mimetype, duration_seconds, uploaded_at) VALUES (?, ?, ?, ?, ?, ?, ?)", (media_id, company_id, title, unique_name, get_mimetype(safe_name), duration, now_iso()))
+        except Exception as exc:
+            app.logger.exception("Media upload failed")
+            flash(f"Upload mislukt: {str(exc)[:180]}")
+            return redirect(url_for("media_library"))
+        try:
+            log_event(actor_label(), "media_uploaded", "media", media_id, title, company_id)
+        except Exception:
+            app.logger.exception("Media upload audit log failed")
         flash("Media toegevoegd.")
         return redirect(url_for("media_library"))
     items = fetch_all("SELECT * FROM media WHERE company_id = ? ORDER BY uploaded_at DESC", (company_id,))
