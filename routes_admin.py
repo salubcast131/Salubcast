@@ -929,12 +929,80 @@ def media_library() -> str:
         log_event(actor_label(), "media_uploaded", "media", media_id, title, company_id)
         flash("Media toegevoegd.")
         return redirect(url_for("media_library"))
-    items = fetch_all("SELECT * FROM media WHERE company_id = ? ORDER BY uploaded_at DESC", (company_id,))
+
+    page = parse_int(request.args.get("page", "1"), 1, minimum=1)
+    per_page = 40
+    total_row = fetch_one("SELECT COUNT(*) AS count FROM media WHERE company_id = ?", (company_id,))
+    total = int(total_row["count"] if total_row else 0)
+    max_page = max(1, (total + per_page - 1) // per_page)
+    page = min(page, max_page)
+    offset = (page - 1) * per_page
+    items = fetch_all(
+        "SELECT * FROM media WHERE company_id = ? ORDER BY uploaded_at DESC LIMIT ? OFFSET ?",
+        (company_id, per_page, offset),
+    )
     content = render_template_string(
         """
-        <div class="grid two"><div class="card"><h2>Upload nieuwe media</h2><form method="post" enctype="multipart/form-data"><input type="hidden" name="action" value="upload"><input name="title" placeholder="Titel"><input name="duration_seconds" type="number" min="1" value="10" placeholder="Duur in seconden"><input name="file" type="file" accept="image/*,video/*,.pdf"><button type="submit">Uploaden</button></form></div><div class="card"><h2>Bibliotheek</h2><table class="table"><thead><tr><th>Preview</th><th>Titel</th><th>Type</th><th>Duur</th><th>Actie</th></tr></thead><tbody>{% for item in items %}<tr><td>{% if item['mimetype'].startswith('image/') %}<img class="media-preview" src="{{ url_for('uploaded_file', filename=item['filename']) }}">{% elif item['mimetype'].startswith('video/') %}[VID]{% elif item['mimetype'] == 'application/pdf' %}[PDF]{% else %}-{% endif %}</td><td>{{ item['title'] }}</td><td>{{ item['mimetype'] }}</td><td>{{ item['duration_seconds'] }}s</td><td><form method="post" onsubmit="return confirm('Media verwijderen?');"><input type="hidden" name="action" value="delete_media"><input type="hidden" name="media_id" value="{{ item['id'] }}"><button type="submit" class="danger">Delete</button></form></td></tr>{% else %}<tr><td colspan="5" class="muted">Nog geen media aanwezig.</td></tr>{% endfor %}</tbody></table></div></div>
+        <div class="grid two">
+          <div class="card">
+            <h2>Upload nieuwe media</h2>
+            <form method="post" enctype="multipart/form-data">
+              <input type="hidden" name="action" value="upload">
+              <input name="title" placeholder="Titel">
+              <input name="duration_seconds" type="number" min="1" value="10" placeholder="Duur in seconden">
+              <input name="file" type="file" accept="image/*,video/*,.pdf">
+              <button type="submit">Uploaden</button>
+            </form>
+          </div>
+          <div class="card">
+            <div class="section-intro">
+              <div>
+                <h2>Bibliotheek</h2>
+                <p>{{ total }} bestanden{% if total > per_page %} - pagina {{ page }} van {{ max_page }}{% endif %}</p>
+              </div>
+              {% if total > per_page %}
+              <div class="inline">
+                {% if page > 1 %}<a class="badge" href="{{ url_for('media_library', page=page-1) }}">Vorige</a>{% endif %}
+                {% if page < max_page %}<a class="badge" href="{{ url_for('media_library', page=page+1) }}">Volgende</a>{% endif %}
+              </div>
+              {% endif %}
+            </div>
+            <table class="table">
+              <thead><tr><th>Preview</th><th>Titel</th><th>Type</th><th>Duur</th><th>Actie</th></tr></thead>
+              <tbody>
+              {% for item in items %}
+                <tr>
+                  <td>
+                    {% if item['mimetype'].startswith('image/') %}
+                      <img class="media-preview" loading="lazy" decoding="async" src="{{ url_for('uploaded_file', filename=item['filename']) }}">
+                    {% elif item['mimetype'].startswith('video/') %}[VID]
+                    {% elif item['mimetype'] == 'application/pdf' %}[PDF]
+                    {% else %}-{% endif %}
+                  </td>
+                  <td>{{ item['title'] }}</td>
+                  <td>{{ item['mimetype'] }}</td>
+                  <td>{{ item['duration_seconds'] }}s</td>
+                  <td>
+                    <form method="post" onsubmit="return confirm('Media verwijderen?');">
+                      <input type="hidden" name="action" value="delete_media">
+                      <input type="hidden" name="media_id" value="{{ item['id'] }}">
+                      <button type="submit" class="danger">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              {% else %}
+                <tr><td colspan="5" class="muted">Nog geen media aanwezig.</td></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
         """,
         items=items,
+        page=page,
+        per_page=per_page,
+        max_page=max_page,
+        total=total,
     )
     return render_shell("Media", content)
 
