@@ -45,7 +45,7 @@ BRAND_LOGO = Path(os.environ.get("SALUBCAST_BRAND_LOGO", str(PROJECT_ROOT / "bra
 PLAYER_INSTALL_DIR = Path(os.environ.get("SALUBCAST_PLAYER_BUILD_DIR", str(PROJECT_ROOT / "player_build"))).resolve()
 PLAYER_INSTALL_DIR.mkdir(exist_ok=True)
 
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "jfif", "webp", "gif", "bmp", "avif", "mp4", "webm", "pdf"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif", "mp4", "webm", "pdf"}
 
 BRAND = {
     "name": "SalubCast",
@@ -221,16 +221,12 @@ def validate_upload_file(file_storage) -> tuple[bool, str]:
     filename = file_storage.filename or ""
     if not allowed_file(filename):
         return False, "Bestandstype niet toegestaan."
-    content_type = (file_storage.mimetype or "").strip().lower()
+    content_type = (file_storage.mimetype or "").lower()
     guessed, _ = mimetypes.guess_type(filename)
-    guessed = (guessed or get_mimetype(filename) or "").lower()
-    valid_guessed = guessed.startswith("image/") or guessed.startswith("video/") or guessed == "application/pdf"
-    generic_content_types = {"", "application/octet-stream", "binary/octet-stream", "application/x-empty"}
-    valid_content = content_type.startswith("image/") or content_type.startswith("video/") or content_type == "application/pdf"
-    if not valid_guessed:
-        return False, "Bestandsnaam/extensie matcht geen geldig mediatype."
-    if content_type not in generic_content_types and not valid_content:
+    if content_type and not (content_type.startswith("image/") or content_type.startswith("video/") or content_type == "application/pdf"):
         return False, "Bestand heeft geen geldig content-type."
+    if guessed and not (guessed.startswith("image/") or guessed.startswith("video/") or guessed == "application/pdf"):
+        return False, "Bestandsnaam/extensie matcht geen geldig mediatype."
     return True, ""
 
 
@@ -620,10 +616,7 @@ def get_mimetype(filename: str) -> str:
         "png": "image/png",
         "jpg": "image/jpeg",
         "jpeg": "image/jpeg",
-        "jfif": "image/jpeg",
         "webp": "image/webp",
-        "bmp": "image/bmp",
-        "avif": "image/avif",
         "gif": "image/gif",
         "mp4": "video/mp4",
         "webm": "video/webm",
