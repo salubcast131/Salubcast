@@ -930,6 +930,19 @@ def media_library() -> str:
         flash("Media toegevoegd.")
         return redirect(url_for("media_library"))
     items = fetch_all("SELECT * FROM media WHERE company_id = ? ORDER BY uploaded_at DESC", (company_id,))
+    safe_items = []
+    for item in items:
+        row = dict(item)
+        filename = str(row.get("filename") or "")
+        mimetype = str(row.get("mimetype") or "")
+        if not mimetype and "." in filename:
+            mimetype = get_mimetype(filename)
+        row["filename"] = filename
+        row["mimetype"] = mimetype or "application/octet-stream"
+        row["title"] = str(row.get("title") or "Untitled")
+        row["duration_seconds"] = row.get("duration_seconds") or 10
+        safe_items.append(row)
+    items = safe_items
     content = render_template_string(
         """
         <div class="grid two"><div class="card"><h2>Upload nieuwe media</h2><form method="post" enctype="multipart/form-data"><input type="hidden" name="action" value="upload"><input name="title" placeholder="Titel"><input name="duration_seconds" type="number" min="1" value="10" placeholder="Duur in seconden"><input name="file" type="file" accept="image/*,video/*,.pdf"><button type="submit">Uploaden</button></form></div><div class="card"><h2>Bibliotheek</h2><table class="table"><thead><tr><th>Preview</th><th>Titel</th><th>Type</th><th>Duur</th><th>Actie</th></tr></thead><tbody>{% for item in items %}<tr><td>{% if item['mimetype'].startswith('image/') %}<img class="media-preview" src="{{ url_for('uploaded_file', filename=item['filename']) }}">{% elif item['mimetype'].startswith('video/') %}[VID]{% elif item['mimetype'] == 'application/pdf' %}[PDF]{% else %}-{% endif %}</td><td>{{ item['title'] }}</td><td>{{ item['mimetype'] }}</td><td>{{ item['duration_seconds'] }}s</td><td><form method="post" onsubmit="return confirm('Media verwijderen?');"><input type="hidden" name="action" value="delete_media"><input type="hidden" name="media_id" value="{{ item['id'] }}"><button type="submit" class="danger">Delete</button></form></td></tr>{% else %}<tr><td colspan="5" class="muted">Nog geen media aanwezig.</td></tr>{% endfor %}</tbody></table></div></div>
