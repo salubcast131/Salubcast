@@ -897,7 +897,10 @@ def dashboard() -> str:
 @app.route("/media", methods=["GET", "POST"])
 @content_admin_required
 def media_library() -> str:
-    company_id = current_company_id()
+    company_id = resolve_current_company_id()
+    if not company_id:
+        flash("Geen geldig bedrijf geselecteerd. Log opnieuw in of kies een bedrijf.")
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         action = request.form.get("action", "upload")
         if action == "delete_media":

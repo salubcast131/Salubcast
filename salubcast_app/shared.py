@@ -647,6 +647,34 @@ def is_superadmin() -> bool:
 def is_admin_like() -> bool:
     return session.get("user_role") in {"superadmin", "company_admin"}
 
+def resolve_current_company_id() -> str | None:
+    company_id = current_company_id()
+    if company_id and fetch_one("SELECT id FROM companies WHERE id = ? LIMIT 1", (company_id,)):
+        return company_id
+
+    user_id = session.get("user_id")
+    if user_id:
+        user_company = fetch_one(
+            "SELECT users.company_id, companies.name AS company_name FROM users JOIN companies ON companies.id = users.company_id WHERE users.id = ? LIMIT 1",
+            (user_id,),
+        )
+        if user_company:
+            session["company_id"] = user_company["company_id"]
+            session["company_name"] = user_company["company_name"]
+            if session.get("user_role") == "superadmin":
+                session.pop("company_view_id", None)
+                session.pop("company_view_name", None)
+            return user_company["company_id"]
+
+    if is_superadmin():
+        company = fetch_one("SELECT id, name FROM companies WHERE is_active = 1 ORDER BY created_at ASC LIMIT 1") or fetch_one("SELECT id, name FROM companies ORDER BY created_at ASC LIMIT 1")
+        if company:
+            session["company_view_id"] = company["id"]
+            session["company_view_name"] = company["name"]
+            return company["id"]
+
+    return None
+
 
 def login_required(fn):
     @wraps(fn)
