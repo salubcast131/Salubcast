@@ -846,37 +846,61 @@ def dashboard() -> str:
 
     content = render_template_string(
         """
-        <div class="hero">
-          <div class="card">
-            <div class="kicker">SaaS-ready cockpit</div>
-            <h1>Welkom in SalubCast V4</h1>
-            <p class="muted">Per bedrijf eigen users, schermen, playlists, branding en installerflow. Dat is nu geen proof of concept meer, maar een serieuze machine.</p>
-            <div class="inline">
-              {% if role == "superadmin" %}<a href="{{ url_for('player_installer') }}"><button style="width:auto;">Player installer</button></a>{% endif %}
-              <a href="{{ url_for('branding_settings') }}"><button class="secondary" style="width:auto;">Branding</button></a>
+        <div class="dashboard-shell">
+          <div class="dashboard-hero">
+            <div class="card dashboard-title">
+              <div class="badge">Control Center</div>
+              <h1>Dashboard</h1>
+              <p>Een helder overzicht van media, playlists en schermstatus voor <strong>{{ company_name }}</strong>. Alles staat op volgorde: eerst de belangrijkste cijfers, daarna je schermen.</p>
+              <div class="quick-actions">
+                <a href="{{ url_for('media_library') }}"><button style="width:auto;">Media beheren</button></a>
+                <a href="{{ url_for('screens_manager') }}"><button class="secondary" style="width:auto;">Schermen</button></a>
+                {% if role == "superadmin" %}<a href="{{ url_for('player_installer') }}"><button class="secondary" style="width:auto;">Player installer</button></a>{% endif %}
+              </div>
+            </div>
+            <div class="card tenant-card">
+              <div>
+                <h3>Omgeving</h3>
+                <p class="muted">Actieve bedrijfscontext en rol.</p>
+              </div>
+              <div>
+                <div class="tenant-line"><span class="muted">Bedrijf</span><strong>{{ company_name }}</strong></div>
+                <div class="tenant-line"><span class="muted">Rol</span><strong>{{ role }}</strong></div>
+                <div class="tenant-line"><span class="muted">Plan</span><strong>{{ company['plan_name'] if company else 'starter' }}</strong></div>
+                <div class="tenant-line"><span class="muted">Billing</span><strong>{{ company['billing_status'] if company else 'trial' }}</strong></div>
+              </div>
             </div>
           </div>
-          <div class="card">
-            <h3>Huidige tenant</h3>
-            <p class="muted">Bedrijf: <strong>{{ company_name }}</strong><br>Rol: <strong>{{ role }}</strong><br>Plan: <strong>{{ company['plan_name'] if company else 'starter' }}</strong><br>Billing: <strong>{{ company['billing_status'] if company else 'trial' }}</strong><br>Tagline: {{ tagline }}</p>
+          <div class="grid cols-4">
+            <div class="card metric-card"><div class="metric-label">Media</div><div class="metric-value">{{ media_count }}</div></div>
+            <div class="card metric-card"><div class="metric-label">Playlists</div><div class="metric-value">{{ playlists }}</div></div>
+            <div class="card metric-card"><div class="metric-label">Schedules</div><div class="metric-value">{{ schedules }}</div></div>
+            <div class="card metric-card"><div class="metric-label">Online schermen</div><div class="metric-value">{{ online }}/{{ screens|length }}</div></div>
+            <div class="card metric-card"><div class="metric-label">Gebruikers</div><div class="metric-value">{{ users_count }}</div></div>
           </div>
-        </div>
-        <div class="grid cols-4">
-          <div class="card"><div class="muted">Media items</div><div class="stat">{{ media_count }}</div></div>
-          <div class="card"><div class="muted">Playlists</div><div class="stat">{{ playlists }}</div></div>
-          <div class="card"><div class="muted">Schedules</div><div class="stat">{{ schedules }}</div></div>
-          <div class="card"><div class="muted">Screens online</div><div class="stat">{{ online }}/{{ screens|length }}</div></div>
-        </div>
-        <div class="grid cols-4" style="margin-top:16px;"><div class="card"><div class="muted">Gebruikers in bedrijf</div><div class="stat">{{ users_count }}</div></div></div>
-        <div class="grid cols-4" style="margin-top:16px;">
-          {% for s in screens %}
-          <div class="card">
-            <h3>{{ s['name'] }}</h3>
-            <div class="muted">{{ s['location'] or 'Geen locatie' }}</div>
-            <div style="margin-top:12px;">{% if s['last_seen'] %}{% set online_flag = (now_ts - ts(s['last_seen'])) < 120 %}<span class="pill {{ '' if online_flag else 'off' }}">{{ 'Online' if online_flag else 'Offline' }}</span>{% else %}<span class="pill off">Nog nooit gezien</span>{% endif %}</div>
-            <div class="muted" style="margin-top:10px;">Player URL: <code>{{ url_for('player_page', screen=s['name'], screen_id=s['id'], token=s['token']) }}</code></div>
+          <div class="section-intro" style="margin-top:8px;">
+            <div>
+              <h2>Schermen</h2>
+              <p>Status, locatie en directe player-link per scherm.</p>
+            </div>
+            <a href="{{ url_for('screens_manager') }}"><button class="secondary" style="width:auto;">Schermen beheren</button></a>
           </div>
-          {% endfor %}
+          <div class="screen-grid">
+            {% for s in screens %}
+            <div class="card screen-card">
+              <div class="screen-top">
+                <div>
+                  <h3>{{ s['name'] }}</h3>
+                  <div class="muted">{{ s['location'] or 'Geen locatie' }}</div>
+                </div>
+                <div>{% if s['last_seen'] %}{% set online_flag = (now_ts - ts(s['last_seen'])) < 120 %}<span class="pill {{ '' if online_flag else 'off' }}">{{ 'Online' if online_flag else 'Offline' }}</span>{% else %}<span class="pill off">Nog nooit gezien</span>{% endif %}</div>
+              </div>
+              <div class="screen-url">{{ url_for('player_page', screen=s['name'], screen_id=s['id'], token=s['token']) }}</div>
+            </div>
+            {% else %}
+            <div class="card"><h3>Nog geen schermen</h3><p class="muted">Voeg eerst een scherm toe om player links en status te zien.</p></div>
+            {% endfor %}
+          </div>
         </div>
         """,
         company_name=current_company_name(),

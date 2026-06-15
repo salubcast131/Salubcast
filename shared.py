@@ -743,6 +743,19 @@ def brand_css() -> str:
       --glow: rgba(34, 197, 94, .12);
       --glow2: rgba(14, 165, 233, .14);
     }}
+    body[data-theme="dark"] {{
+      --panel: rgba(9,18,32,.62);
+      --soft: rgba(15,23,42,.54);
+      --line: rgba(226,232,240,.14);
+      --text: #eef6ff;
+      --muted: #a7b6c9;
+      --shell: #06111f;
+      --shell2: #0b1728;
+      --panel-strong: rgba(9,18,32,.7);
+      --panel-soft: rgba(15,23,42,.46);
+      --glow: rgba(34, 197, 94, .18);
+      --glow2: rgba(56, 189, 248, .18);
+    }}
     * {{ box-sizing: border-box; }}
     html {{ min-height:100%; background:
       linear-gradient(135deg, #f8fbff 0%, #eef5fb 38%, #e8f7ef 72%, #f7fafc 100%); }}
@@ -755,6 +768,12 @@ def brand_css() -> str:
         linear-gradient(135deg, rgba(34,197,94,.08), rgba(14,165,233,.08) 48%, rgba(250,204,21,.08));
       color:var(--text);
     }}
+    body[data-theme="dark"] {{
+      background:
+        radial-gradient(circle at 18% -6%, rgba(34,197,94,.2), transparent 28%),
+        radial-gradient(circle at 92% 4%, rgba(56,189,248,.18), transparent 30%),
+        linear-gradient(145deg, #04101d 0%, #0a1626 44%, #07111f 100%);
+    }}
     body::before {{
       content:'';
       position:fixed;
@@ -763,6 +782,12 @@ def brand_css() -> str:
       background:
         linear-gradient(120deg, rgba(255,255,255,.52), rgba(255,255,255,0) 34%, rgba(255,255,255,.36)),
         linear-gradient(180deg, rgba(15,23,42,.04), rgba(15,23,42,0));
+      opacity:1;
+    }}
+    body[data-theme="dark"]::before {{
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.08), rgba(255,255,255,0) 34%, rgba(255,255,255,.06)),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 32%);
       opacity:1;
     }}
     a {{ color:inherit; text-decoration:none; transition:all .22s ease; }}
@@ -779,7 +804,8 @@ def brand_css() -> str:
       border:1px solid rgba(255,255,255,.72);
       background:linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
       box-shadow:0 24px 70px rgba(15,23,42,.14);
-      backdrop-filter: blur(28px) saturate(170%);
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
     }}
     .brand {{ display:flex; flex-direction:column; gap:8px; max-width:760px; }}
     .brand-title {{
@@ -789,6 +815,31 @@ def brand_css() -> str:
       line-height:.98;
     }}
     .brand-sub {{ color:var(--muted); font-size:16px; max-width:58ch; }}
+    .header-actions {{ display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap; }}
+    .header-actions form {{ display:inline; }}
+    .shell-action, .theme-toggle {{
+      width:auto;
+      min-height:42px;
+      padding:11px 15px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.66);
+      background:rgba(255,255,255,.62);
+      color:#102033;
+      font-weight:850;
+      box-shadow:0 14px 30px rgba(15,23,42,.1), inset 0 1px 0 rgba(255,255,255,.76);
+      backdrop-filter: blur(22px) saturate(170%);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+    }}
+    .shell-action:hover, .theme-toggle:hover {{ transform:translateY(-1px); box-shadow:0 18px 38px rgba(15,23,42,.14); }}
+    body[data-theme="dark"] .shell-action,
+    body[data-theme="dark"] .theme-toggle {{
+      background:rgba(15,23,42,.62);
+      color:#eef6ff;
+      border-color:rgba(226,232,240,.16);
+      box-shadow:0 14px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.08);
+    }}
+    .theme-toggle {{ display:inline-flex; align-items:center; gap:8px; }}
+    .theme-toggle::before {{ content:'Thema'; font-size:10px; letter-spacing:.12em; text-transform:uppercase; opacity:.7; }}
     .nav {{
       display:flex;
       gap:12px;
@@ -803,6 +854,7 @@ def brand_css() -> str:
       z-index:99;
       margin-bottom:22px;
       box-shadow:0 16px 44px rgba(15,23,42,.1);
+      justify-content:flex-start;
     }}
     .nav a {{
       background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.48));
@@ -812,6 +864,11 @@ def brand_css() -> str:
       font-size:14px;
       font-weight:750;
       color:#1e293b;
+    }}
+    body[data-theme="dark"] .nav a {{
+      background:linear-gradient(180deg, rgba(15,23,42,.68), rgba(15,23,42,.38));
+      border-color:rgba(226,232,240,.13);
+      color:#e2e8f0;
     }}
     .nav a:hover {{
       border-color: rgba(34,197,94,.35);
@@ -828,7 +885,8 @@ def brand_css() -> str:
       border-radius:24px;
       padding:22px;
       box-shadow:0 18px 54px rgba(15,23,42,.12);
-      backdrop-filter: blur(28px) saturate(170%);
+      backdrop-filter: blur(32px) saturate(180%);
+      -webkit-backdrop-filter: blur(32px) saturate(180%);
     }}
     .muted {{ color:var(--muted); }}
     .hero {{ display:grid; gap:18px; grid-template-columns: 1.2fr .8fr; margin-bottom:18px; }}
@@ -862,6 +920,17 @@ def brand_css() -> str:
       letter-spacing:.01em;
     }}
     button.secondary {{ background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); }}
+    .secondary {{
+      color:#102033;
+      border:1px solid rgba(255,255,255,.64);
+      background:rgba(255,255,255,.58);
+      box-shadow:0 12px 26px rgba(15,23,42,.1);
+    }}
+    body[data-theme="dark"] .secondary {{
+      color:#eef6ff;
+      border-color:rgba(226,232,240,.14);
+      background:rgba(15,23,42,.52);
+    }}
     button.danger {{ background:linear-gradient(135deg, #b91c1c, #ef4444); }}
     .table {{
       width:100%;
@@ -909,12 +978,13 @@ def brand_css() -> str:
       border:1px solid rgba(34,197,94,.25);
       background:
         linear-gradient(135deg, rgba(34,197,94,.16), rgba(251,191,36,.1));
-      color:#dcfce7;
+      color:#14532d;
       font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
       font-size:12px;
     }}
+    body[data-theme="dark"] .logo-chip {{ color:#dcfce7; border-color:rgba(34,197,94,.32); background:linear-gradient(135deg, rgba(34,197,94,.18), rgba(56,189,248,.1)); }}
     .badge {{
       display:inline-flex;
       padding:8px 12px;
@@ -925,6 +995,11 @@ def brand_css() -> str:
       font-weight:800;
       border:1px solid rgba(255,255,255,.72);
       backdrop-filter: blur(18px);
+    }}
+    body[data-theme="dark"] .badge {{
+      background:rgba(15,23,42,.52);
+      color:#d8fbe6;
+      border-color:rgba(226,232,240,.14);
     }}
     .logo-preview {{ width: 100%; max-width: 520px; max-height: 160px; object-fit: contain; border-radius: 0; background: transparent; padding: 0; display:block; }}
     .kicker {{ font-size:12px; color:#fcd34d; text-transform:uppercase; letter-spacing:.18em; font-weight:800; }}
@@ -938,10 +1013,44 @@ def brand_css() -> str:
       margin-bottom:14px;
     }}
     .section-intro p {{ margin:0; max-width:70ch; color:var(--muted); font-size:16px; }}
+    .dashboard-shell {{ display:grid; gap:18px; }}
+    .dashboard-hero {{
+      display:grid;
+      grid-template-columns:minmax(0, 1.15fr) minmax(280px, .85fr);
+      gap:18px;
+      align-items:stretch;
+      margin-bottom:18px;
+    }}
+    .dashboard-title {{ display:grid; gap:12px; align-content:center; }}
+    .dashboard-title h1 {{ margin:0; font-size:clamp(2.15rem, 3.2vw, 4.3rem); line-height:.96; max-width:11ch; }}
+    .dashboard-title p {{ margin:0; color:var(--muted); font-size:17px; max-width:58ch; line-height:1.55; }}
+    .quick-actions {{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }}
+    .quick-actions a {{ display:inline-flex; }}
+    .metric-card {{ min-height:150px; display:grid; align-content:space-between; gap:14px; position:relative; overflow:hidden; }}
+    .metric-card::after {{
+      content:'';
+      position:absolute;
+      inset:auto -18% -44% auto;
+      width:180px;
+      height:180px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(34,197,94,.18), transparent 66%);
+      pointer-events:none;
+    }}
+    .metric-label {{ color:var(--muted); font-size:13px; font-weight:850; letter-spacing:.12em; text-transform:uppercase; }}
+    .metric-value {{ font-size:clamp(2.3rem, 4vw, 4.4rem); font-weight:950; letter-spacing:-.06em; line-height:.9; }}
+    .tenant-card {{ display:grid; gap:12px; align-content:space-between; }}
+    .tenant-line {{ display:flex; justify-content:space-between; gap:14px; border-bottom:1px solid var(--line); padding:10px 0; }}
+    .tenant-line:last-child {{ border-bottom:0; }}
+    .screen-grid {{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }}
+    .screen-card {{ display:grid; gap:12px; min-height:170px; }}
+    .screen-top {{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }}
+    .screen-url {{ font-size:12px; color:var(--muted); word-break:break-all; line-height:1.45; }}
     @media (max-width: 950px) {{
-      .hero, .two, .three {{ grid-template-columns: 1fr; }}
+      .hero, .two, .three, .dashboard-hero {{ grid-template-columns: 1fr; }}
       .wrap {{ padding:18px 14px 28px; }}
       .topbar {{ padding:18px; border-radius:24px; }}
+      .header-actions {{ justify-content:flex-start; }}
       .nav {{ border-radius:22px; }}
     }}
     """
@@ -963,7 +1072,7 @@ def render_shell(title: str, content: str) -> str:
       <title>{{{{ title }}}}</title>
       <style>{brand_css()}</style>
     </head>
-    <body>
+    <body data-theme="light">
       <div class="wrap">
         <div class="topbar">
           <div class="brand">
@@ -973,11 +1082,12 @@ def render_shell(title: str, content: str) -> str:
             {logo_html}
           </div>
           {{% if session.get('user_id') %}}
-          <div class="inline">
+          <div class="header-actions">
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="Thema wisselen" aria-pressed="false">Donker</button>
             <span class="badge">{{{{ session.get('company_view_name', session.get('company_name', 'Geen bedrijf')) }}}}</span>
             <span class="badge">{{{{ session.get('user_name', 'Admin') }}}} | {{{{ session.get('user_role', 'user') }}}}</span>
-            <form method="post" action="{{{{ url_for('logout') }}}}" style="display:inline;">
-              <button class="secondary" style="width:auto;">Uitloggen</button>
+            <form method="post" action="{{{{ url_for('logout') }}}}">
+              <button class="shell-action" type="submit">Uitloggen</button>
             </form>
           </div>
           {{% endif %}}
@@ -1017,6 +1127,27 @@ def render_shell(title: str, content: str) -> str:
         {content}
       </div>
           <script>
+      (function() {{
+        const key = 'salubcast-theme';
+        const button = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const saved = localStorage.getItem(key);
+        function applyTheme(theme) {{
+          document.body.dataset.theme = theme;
+          if (button) {{
+            button.textContent = theme === 'dark' ? 'Licht' : 'Donker';
+            button.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+          }}
+        }}
+        applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+        if (button) {{
+          button.addEventListener('click', () => {{
+            const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem(key, next);
+            applyTheme(next);
+          }});
+        }}
+      }})();
       document.querySelectorAll('form[method="post"], form:not([method])').forEach((form) => {{
         if (form.querySelector('input[name="_csrf_token"]')) return;
         const input = document.createElement('input');
