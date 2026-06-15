@@ -728,33 +728,31 @@ def generate_activation_code() -> str:
 def brand_css() -> str:
     return f"""
     :root {{
-      --panel: {BRAND['panel']};
-      --soft: {BRAND['soft']};
-      --line: {BRAND['line']};
-      --text: {BRAND['text']};
-      --muted: {BRAND['muted']};
+      --panel: rgba(255,255,255,.72);
+      --soft: rgba(241,245,249,.72);
+      --line: rgba(15,23,42,.12);
+      --text: #102033;
+      --muted: #64748b;
       --accent: {BRAND['primary']};
       --accent2: {BRAND['secondary']};
       --danger: #ef4444;
-      --shell: #07111b;
-      --shell2: #0d1824;
-      --panel-strong: rgba(8, 18, 30, .88);
-      --panel-soft: rgba(13, 24, 36, .78);
-      --glow: rgba(34, 197, 94, .18);
-      --glow2: rgba(251, 191, 36, .16);
+      --shell: #edf3f9;
+      --shell2: #dfe9f5;
+      --panel-strong: rgba(255,255,255,.78);
+      --panel-soft: rgba(255,255,255,.54);
+      --glow: rgba(34, 197, 94, .12);
+      --glow2: rgba(14, 165, 233, .14);
     }}
     * {{ box-sizing: border-box; }}
     html {{ min-height:100%; background:
-      radial-gradient(circle at top left, rgba(34,197,94,.12), transparent 26%),
-      radial-gradient(circle at top right, rgba(251,191,36,.12), transparent 22%),
-      linear-gradient(180deg, #040a12, #0a1320 48%, #0d1824); }}
+      linear-gradient(135deg, #f8fbff 0%, #eef5fb 38%, #e8f7ef 72%, #f7fafc 100%); }}
     body {{
       margin:0;
       min-height:100vh;
       font-family:"Segoe UI Variable Display","Segoe UI","Trebuchet MS",sans-serif;
       background:
-        radial-gradient(circle at 85% 0%, rgba(56,189,248,.14), transparent 24%),
-        linear-gradient(180deg, rgba(7,17,27,.72), rgba(7,17,27,.92));
+        linear-gradient(180deg, rgba(255,255,255,.58), rgba(255,255,255,.2)),
+        linear-gradient(135deg, rgba(34,197,94,.08), rgba(14,165,233,.08) 48%, rgba(250,204,21,.08));
       color:var(--text);
     }}
     body::before {{
@@ -763,9 +761,9 @@ def brand_css() -> str:
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(120deg, rgba(255,255,255,.03), transparent 20%, transparent 80%, rgba(255,255,255,.02)),
-        radial-gradient(circle at 15% 20%, var(--glow), transparent 26%);
-      opacity:.9;
+        linear-gradient(120deg, rgba(255,255,255,.52), rgba(255,255,255,0) 34%, rgba(255,255,255,.36)),
+        linear-gradient(180deg, rgba(15,23,42,.04), rgba(15,23,42,0));
+      opacity:1;
     }}
     a {{ color:inherit; text-decoration:none; transition:all .22s ease; }}
     .wrap {{ max-width: 1480px; margin:0 auto; padding:28px 24px 42px; position:relative; z-index:1; }}
@@ -777,13 +775,11 @@ def brand_css() -> str:
       align-items:flex-start;
       margin-bottom:24px;
       padding:22px 24px;
-      border-radius:30px;
-      border:1px solid rgba(148,163,184,.16);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
-        linear-gradient(135deg, rgba(8,18,30,.92), rgba(13,24,36,.88));
-      box-shadow:0 24px 60px rgba(0,0,0,.28);
-      backdrop-filter: blur(18px);
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.72);
+      background:linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
+      box-shadow:0 24px 70px rgba(15,23,42,.14);
+      backdrop-filter: blur(28px) saturate(170%);
     }}
     .brand {{ display:flex; flex-direction:column; gap:8px; max-width:760px; }}
     .brand-title {{
@@ -798,43 +794,41 @@ def brand_css() -> str:
       gap:12px;
       flex-wrap:wrap;
       padding:14px;
-      border-radius:26px;
-      background:rgba(8,18,30,.76);
-      border:1px solid rgba(148,163,184,.14);
+      border-radius:24px;
+      background:rgba(255,255,255,.58);
+      border:1px solid rgba(255,255,255,.72);
       position:sticky;
       top:12px;
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(26px) saturate(180%);
       z-index:99;
       margin-bottom:22px;
-      box-shadow:0 18px 50px rgba(0,0,0,.2);
+      box-shadow:0 16px 44px rgba(15,23,42,.1);
     }}
     .nav a {{
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.48));
       padding:12px 16px;
       border-radius:16px;
-      border:1px solid rgba(148,163,184,.08);
+      border:1px solid rgba(255,255,255,.72);
       font-size:14px;
-      font-weight:700;
-      color:#dbeafe;
+      font-weight:750;
+      color:#1e293b;
     }}
     .nav a:hover {{
-      border-color: rgba(34,197,94,.34);
+      border-color: rgba(34,197,94,.35);
       transform: translateY(-1px);
-      box-shadow:0 10px 24px rgba(34,197,94,.08);
+      box-shadow:0 12px 30px rgba(34,197,94,.12);
     }}
     .grid {{ display:grid; gap:18px; }}
     .cols-4 {{ grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }}
     .two {{ grid-template-columns: 430px 1fr; align-items:start; }}
     .three {{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }}
     .card {{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-        linear-gradient(180deg, var(--panel-strong), var(--panel-soft));
-      border:1px solid rgba(148,163,184,.12);
-      border-radius:28px;
+      background:linear-gradient(180deg, var(--panel-strong), var(--panel-soft));
+      border:1px solid rgba(255,255,255,.74);
+      border-radius:24px;
       padding:22px;
-      box-shadow: 0 18px 44px rgba(0,0,0,.24);
-      backdrop-filter: blur(14px);
+      box-shadow:0 18px 54px rgba(15,23,42,.12);
+      backdrop-filter: blur(28px) saturate(170%);
     }}
     .muted {{ color:var(--muted); }}
     .hero {{ display:grid; gap:18px; grid-template-columns: 1.2fr .8fr; margin-bottom:18px; }}
@@ -849,10 +843,10 @@ def brand_css() -> str:
       width:100%;
       padding:14px 16px;
       border-radius:16px;
-      border:1px solid rgba(148,163,184,.16);
-      background:rgba(9,16,28,.86);
+      border:1px solid rgba(148,163,184,.24);
+      background:rgba(255,255,255,.68);
       color:var(--text);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
     }}
     input:focus, select:focus, textarea:focus {{
       outline:none;
@@ -875,7 +869,7 @@ def brand_css() -> str:
       border-spacing:0;
       overflow:hidden;
       border-radius:22px;
-      background:rgba(6,13,23,.35);
+      background:rgba(255,255,255,.42);
     }}
     .table th, .table td {{
       padding:14px 16px;
@@ -884,11 +878,11 @@ def brand_css() -> str:
       vertical-align:top;
     }}
     .table th {{
-      color:#dbeafe;
+      color:#334155;
       font-size:13px;
       text-transform:uppercase;
       letter-spacing:.12em;
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.48);
     }}
     .pill {{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:#052e16; color:#86efac; font-size:12px; font-weight:800; }}
     .pill.off {{ background:#450a0a; color:#fca5a5; }}
@@ -925,15 +919,16 @@ def brand_css() -> str:
       display:inline-flex;
       padding:8px 12px;
       border-radius:999px;
-      background:rgba(255,255,255,.06);
-      color:#d1fae5;
+      background:rgba(255,255,255,.58);
+      color:#14532d;
       font-size:12px;
       font-weight:800;
-      border:1px solid rgba(148,163,184,.12);
+      border:1px solid rgba(255,255,255,.72);
+      backdrop-filter: blur(18px);
     }}
     .logo-preview {{ width: 100%; max-width: 520px; max-height: 160px; object-fit: contain; border-radius: 0; background: transparent; padding: 0; display:block; }}
     .kicker {{ font-size:12px; color:#fcd34d; text-transform:uppercase; letter-spacing:.18em; font-weight:800; }}
-    .codebox {{ font-family:Consolas, monospace; font-size:30px; letter-spacing:.12em; padding:18px; border-radius:22px; background:#06111f; border:1px solid rgba(148,163,184,.16); text-align:center; }}
+    .codebox {{ font-family:Consolas, monospace; font-size:30px; letter-spacing:.12em; padding:18px; border-radius:22px; background:rgba(255,255,255,.58); border:1px solid rgba(255,255,255,.72); text-align:center; color:#0f172a; }}
     .section-intro {{
       display:flex;
       justify-content:space-between;
