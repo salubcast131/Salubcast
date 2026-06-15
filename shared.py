@@ -728,20 +728,20 @@ def generate_activation_code() -> str:
 def brand_css() -> str:
     return f"""
     :root {{
-      --panel: rgba(255,255,255,.72);
-      --soft: rgba(241,245,249,.72);
-      --line: rgba(15,23,42,.12);
-      --text: #102033;
-      --muted: #64748b;
-      --accent: {BRAND['primary']};
-      --accent2: {BRAND['secondary']};
+      --panel: rgba(255,255,255,.64);
+      --soft: rgba(248,250,252,.58);
+      --line: rgba(15,23,42,.1);
+      --text: #111827;
+      --muted: #5f6f83;
+      --accent: #10b981;
+      --accent2: #0f766e;
       --danger: #ef4444;
-      --shell: #edf3f9;
-      --shell2: #dfe9f5;
-      --panel-strong: rgba(255,255,255,.78);
-      --panel-soft: rgba(255,255,255,.54);
-      --glow: rgba(34, 197, 94, .12);
-      --glow2: rgba(14, 165, 233, .14);
+      --shell: #eef4f8;
+      --shell2: #dfe8ee;
+      --panel-strong: rgba(255,255,255,.66);
+      --panel-soft: rgba(255,255,255,.34);
+      --glow: rgba(16, 185, 129, .12);
+      --glow2: rgba(15, 118, 110, .1);
     }}
     body[data-theme="dark"] {{
       --panel: rgba(9,18,32,.62);
@@ -757,22 +757,22 @@ def brand_css() -> str:
       --glow2: rgba(56, 189, 248, .18);
     }}
     * {{ box-sizing: border-box; }}
-    html {{ min-height:100%; background:
-      linear-gradient(135deg, #f8fbff 0%, #eef5fb 38%, #e8f7ef 72%, #f7fafc 100%); }}
+    html {{ min-height:100%; background:#eef4f8; }}
     body {{
       margin:0;
       min-height:100vh;
       font-family:"Segoe UI Variable Display","Segoe UI","Trebuchet MS",sans-serif;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.58), rgba(255,255,255,.2)),
-        linear-gradient(135deg, rgba(34,197,94,.08), rgba(14,165,233,.08) 48%, rgba(250,204,21,.08));
+        radial-gradient(circle at 12% -8%, rgba(16,185,129,.16), transparent 30%),
+        radial-gradient(circle at 88% 0%, rgba(15,118,110,.1), transparent 32%),
+        linear-gradient(135deg, #f7fafc 0%, #edf4f8 48%, #f8fafc 100%);
       color:var(--text);
     }}
     body[data-theme="dark"] {{
       background:
         radial-gradient(circle at 18% -6%, rgba(34,197,94,.2), transparent 28%),
         radial-gradient(circle at 92% 4%, rgba(56,189,248,.18), transparent 30%),
-        linear-gradient(145deg, #04101d 0%, #0a1626 44%, #07111f 100%);
+        linear-gradient(145deg, #050a12 0%, #0b1220 52%, #071018 100%);
     }}
     body::before {{
       content:'';
@@ -780,8 +780,8 @@ def brand_css() -> str:
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(120deg, rgba(255,255,255,.52), rgba(255,255,255,0) 34%, rgba(255,255,255,.36)),
-        linear-gradient(180deg, rgba(15,23,42,.04), rgba(15,23,42,0));
+        linear-gradient(120deg, rgba(255,255,255,.42), rgba(255,255,255,0) 30%, rgba(255,255,255,.28)),
+        linear-gradient(180deg, rgba(15,23,42,.035), rgba(15,23,42,0));
       opacity:1;
     }}
     body[data-theme="dark"]::before {{
@@ -799,19 +799,19 @@ def brand_css() -> str:
       flex-wrap:wrap;
       align-items:flex-start;
       margin-bottom:24px;
-      padding:22px 24px;
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.72);
-      background:linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
-      box-shadow:0 24px 70px rgba(15,23,42,.14);
+      padding:18px 20px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.62);
+      background:linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.32));
+      box-shadow:0 24px 70px rgba(15,23,42,.1);
       backdrop-filter: blur(34px) saturate(180%);
       -webkit-backdrop-filter: blur(34px) saturate(180%);
     }}
     .brand {{ display:flex; flex-direction:column; gap:8px; max-width:760px; }}
     .brand-title {{
-      font-size: clamp(2rem, 2.8vw, 3.15rem);
-      font-weight: 900;
-      letter-spacing:-.04em;
+      font-size: clamp(1.7rem, 2.2vw, 2.55rem);
+      font-weight: 850;
+      letter-spacing:-.03em;
       line-height:.98;
     }}
     .brand-sub {{ color:var(--muted); font-size:16px; max-width:58ch; }}
@@ -821,9 +821,9 @@ def brand_css() -> str:
       width:auto;
       min-height:42px;
       padding:11px 15px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.66);
-      background:rgba(255,255,255,.62);
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.08);
+      background:rgba(255,255,255,.5);
       color:#102033;
       font-weight:850;
       box-shadow:0 14px 30px rgba(15,23,42,.1), inset 0 1px 0 rgba(255,255,255,.76);
@@ -845,9 +845,9 @@ def brand_css() -> str:
       gap:12px;
       flex-wrap:wrap;
       padding:14px;
-      border-radius:24px;
-      background:rgba(255,255,255,.58);
-      border:1px solid rgba(255,255,255,.72);
+      border-radius:20px;
+      background:rgba(255,255,255,.36);
+      border:1px solid rgba(255,255,255,.56);
       position:sticky;
       top:12px;
       backdrop-filter: blur(26px) saturate(180%);
@@ -857,12 +857,12 @@ def brand_css() -> str:
       justify-content:flex-start;
     }}
     .nav a {{
-      background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.48));
-      padding:12px 16px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.72);
+      background:rgba(255,255,255,.44);
+      padding:10px 14px;
+      border-radius:13px;
+      border:1px solid rgba(15,23,42,.07);
       font-size:14px;
-      font-weight:750;
+      font-weight:720;
       color:#1e293b;
     }}
     body[data-theme="dark"] .nav a {{
@@ -881,10 +881,10 @@ def brand_css() -> str:
     .three {{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }}
     .card {{
       background:linear-gradient(180deg, var(--panel-strong), var(--panel-soft));
-      border:1px solid rgba(255,255,255,.74);
-      border-radius:24px;
+      border:1px solid rgba(255,255,255,.58);
+      border-radius:20px;
       padding:22px;
-      box-shadow:0 18px 54px rgba(15,23,42,.12);
+      box-shadow:0 18px 48px rgba(15,23,42,.09);
       backdrop-filter: blur(32px) saturate(180%);
       -webkit-backdrop-filter: blur(32px) saturate(180%);
     }}
@@ -914,7 +914,7 @@ def brand_css() -> str:
     button {{
       cursor:pointer;
       border:none;
-      background:linear-gradient(135deg, #15803d, #22c55e 58%, #f59e0b 120%);
+      background:linear-gradient(135deg, #0f766e, #10b981);
       color:white;
       font-weight:800;
       letter-spacing:.01em;
@@ -976,9 +976,8 @@ def brand_css() -> str:
       padding:9px 14px;
       border-radius:999px;
       border:1px solid rgba(34,197,94,.25);
-      background:
-        linear-gradient(135deg, rgba(34,197,94,.16), rgba(251,191,36,.1));
-      color:#14532d;
+      background:rgba(255,255,255,.44);
+      color:#0f766e;
       font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
@@ -1022,11 +1021,11 @@ def brand_css() -> str:
       margin-bottom:18px;
     }}
     .dashboard-title {{ display:grid; gap:12px; align-content:center; }}
-    .dashboard-title h1 {{ margin:0; font-size:clamp(2.15rem, 3.2vw, 4.3rem); line-height:.96; max-width:11ch; }}
+    .dashboard-title h1 {{ margin:0; font-size:clamp(2rem, 2.8vw, 3.6rem); line-height:1; max-width:12ch; }}
     .dashboard-title p {{ margin:0; color:var(--muted); font-size:17px; max-width:58ch; line-height:1.55; }}
     .quick-actions {{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }}
     .quick-actions a {{ display:inline-flex; }}
-    .metric-card {{ min-height:150px; display:grid; align-content:space-between; gap:14px; position:relative; overflow:hidden; }}
+    .metric-card {{ min-height:142px; display:grid; align-content:space-between; gap:14px; position:relative; overflow:hidden; }}
     .metric-card::after {{
       content:'';
       position:absolute;
@@ -1034,11 +1033,11 @@ def brand_css() -> str:
       width:180px;
       height:180px;
       border-radius:999px;
-      background:radial-gradient(circle, rgba(34,197,94,.18), transparent 66%);
+      background:radial-gradient(circle, rgba(15,118,110,.13), transparent 66%);
       pointer-events:none;
     }}
     .metric-label {{ color:var(--muted); font-size:13px; font-weight:850; letter-spacing:.12em; text-transform:uppercase; }}
-    .metric-value {{ font-size:clamp(2.3rem, 4vw, 4.4rem); font-weight:950; letter-spacing:-.06em; line-height:.9; }}
+    .metric-value {{ font-size:clamp(2.2rem, 3.5vw, 4rem); font-weight:900; letter-spacing:-.05em; line-height:.92; }}
     .tenant-card {{ display:grid; gap:12px; align-content:space-between; }}
     .tenant-line {{ display:flex; justify-content:space-between; gap:14px; border-bottom:1px solid var(--line); padding:10px 0; }}
     .tenant-line:last-child {{ border-bottom:0; }}
