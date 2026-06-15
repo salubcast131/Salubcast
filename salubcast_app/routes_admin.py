@@ -947,6 +947,7 @@ def media_library() -> str:
           <div class="card">
             <h2>Upload nieuwe media</h2>
             <form method="post" enctype="multipart/form-data">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
               <input type="hidden" name="action" value="upload">
               <input name="title" placeholder="Titel">
               <input name="duration_seconds" type="number" min="1" value="10" placeholder="Duur in seconden">
@@ -984,6 +985,7 @@ def media_library() -> str:
                   <td>{{ item['duration_seconds'] }}s</td>
                   <td>
                     <form method="post" onsubmit="return confirm('Media verwijderen?');">
+                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                       <input type="hidden" name="action" value="delete_media">
                       <input type="hidden" name="media_id" value="{{ item['id'] }}">
                       <button type="submit" class="danger">Delete</button>
