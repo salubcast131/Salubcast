@@ -1022,9 +1022,9 @@ def create_player_package_zip(server_base_url: str, screen_id: str, screen_name:
                     "screen_id": screen_id,
                     "screen_token": screen_token,
                     "activation_code": activation_code,
-                    "activated": False,
-                    "browser": "auto",
-                    "fullscreen": True,
+                    "activated": True,
+                    "browser": "chrome",
+                    "fullscreen": "true",
                 },
                 indent=2,
             ),
@@ -1108,8 +1108,10 @@ def create_player_package_zip(server_base_url: str, screen_id: str, screen_name:
             "with open(path, 'r', encoding='utf-8') as f:\n"
             "    cfg = json.load(f)\n"
             "browser = str(cfg.get('browser', 'auto')).strip().lower()\n"
-            "if browser in {'', 'auto'}:\n"
-            "    for name, commands in [('chromium', ['chromium', 'chromium-browser']), ('chrome', ['google-chrome', 'chrome']), ('edge', ['microsoft-edge', 'msedge'])]:\n"
+            "if any(shutil.which(cmd) for cmd in ['chromium', 'chromium-browser']):\n"
+            "    cfg['browser'] = 'chromium'\n"
+            "elif browser in {'', 'auto'}:\n"
+            "    for name, commands in [('chrome', ['google-chrome', 'chrome']), ('edge', ['microsoft-edge', 'msedge'])]:\n"
             "        if any(shutil.which(cmd) for cmd in commands):\n"
             "            cfg['browser'] = name\n"
             "            break\n"
@@ -1177,7 +1179,7 @@ def create_player_package_zip(server_base_url: str, screen_id: str, screen_name:
                 "2. Dubbelklik start_player.bat\n\n"
                 "Linux:\n"
                 "1. Zorg dat python3 en een kiosk-browser beschikbaar zijn.\n"
-                "2. Browserdetectie staat standaard op auto in player_config.json.\n"
+                "2. Linux zet player_config.json automatisch op chromium als Chromium beschikbaar is.\n"
                 "3. Snelste klikbare optie: dubbelklik Install_SalubCast_Player.sh of Install_SalubCast_Player.desktop.\n"
                 "4. Alles-in-een via terminal: bash install_and_start_linux.sh\n"
                 "5. Installeer launcher en autostart los met: bash install_linux.sh\n"
