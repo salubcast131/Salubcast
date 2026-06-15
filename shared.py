@@ -744,17 +744,17 @@ def brand_css() -> str:
       --glow2: rgba(15, 118, 110, .1);
     }}
     body[data-theme="dark"] {{
-      --panel: rgba(9,18,32,.62);
-      --soft: rgba(15,23,42,.54);
-      --line: rgba(226,232,240,.14);
-      --text: #eef6ff;
-      --muted: #a7b6c9;
-      --shell: #06111f;
-      --shell2: #0b1728;
-      --panel-strong: rgba(9,18,32,.7);
-      --panel-soft: rgba(15,23,42,.46);
-      --glow: rgba(34, 197, 94, .18);
-      --glow2: rgba(56, 189, 248, .18);
+      --panel: rgba(9,16,28,.88);
+      --soft: rgba(9,16,28,.74);
+      --line: rgba(148,163,184,.14);
+      --text: #edf4fb;
+      --muted: #93a4b8;
+      --shell: #070d17;
+      --shell2: #0a1220;
+      --panel-strong: rgba(9,16,28,.88);
+      --panel-soft: rgba(9,16,28,.7);
+      --glow: rgba(16, 185, 129, .08);
+      --glow2: rgba(148, 163, 184, .06);
     }}
     * {{ box-sizing: border-box; }}
     html {{ min-height:100%; background:#eef4f8; }}
@@ -769,10 +769,7 @@ def brand_css() -> str:
       color:var(--text);
     }}
     body[data-theme="dark"] {{
-      background:
-        radial-gradient(circle at 18% -6%, rgba(34,197,94,.2), transparent 28%),
-        radial-gradient(circle at 92% 4%, rgba(56,189,248,.18), transparent 30%),
-        linear-gradient(145deg, #050a12 0%, #0b1220 52%, #071018 100%);
+      background:linear-gradient(145deg, #070d17 0%, #0a1220 52%, #070d17 100%);
     }}
     body::before {{
       content:'';
@@ -785,9 +782,7 @@ def brand_css() -> str:
       opacity:1;
     }}
     body[data-theme="dark"]::before {{
-      background:
-        linear-gradient(120deg, rgba(255,255,255,.08), rgba(255,255,255,0) 34%, rgba(255,255,255,.06)),
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 32%);
+      background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0));
       opacity:1;
     }}
     a {{ color:inherit; text-decoration:none; transition:all .22s ease; }}
@@ -833,9 +828,9 @@ def brand_css() -> str:
     .shell-action:hover, .theme-toggle:hover {{ transform:translateY(-1px); box-shadow:0 18px 38px rgba(15,23,42,.14); }}
     body[data-theme="dark"] .shell-action,
     body[data-theme="dark"] .theme-toggle {{
-      background:rgba(15,23,42,.62);
-      color:#eef6ff;
-      border-color:rgba(226,232,240,.16);
+      background:rgba(9,16,28,.9);
+      color:#edf4fb;
+      border-color:rgba(148,163,184,.16);
       box-shadow:0 14px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.08);
     }}
     .theme-toggle {{ display:inline-flex; align-items:center; gap:8px; }}
@@ -888,6 +883,53 @@ def brand_css() -> str:
       backdrop-filter: blur(32px) saturate(180%);
       -webkit-backdrop-filter: blur(32px) saturate(180%);
     }}
+
+    body[data-theme="dark"] .topbar,
+    body[data-theme="dark"] .nav,
+    body[data-theme="dark"] .card {{
+      background:linear-gradient(180deg, rgba(9,16,28,.9), rgba(9,16,28,.74));
+      border-color:rgba(148,163,184,.16);
+      box-shadow:0 20px 54px rgba(0,0,0,.28);
+    }}
+    body[data-theme="dark"] .nav {{ background:rgba(9,16,28,.84); }}
+    body[data-theme="dark"] .nav a {{
+      background:rgba(9,16,28,.86);
+      border-color:rgba(148,163,184,.14);
+      color:#e5edf7;
+    }}
+    body[data-theme="dark"] .nav a:hover {{
+      border-color:rgba(16,185,129,.34);
+      box-shadow:0 12px 30px rgba(0,0,0,.22);
+    }}
+    body[data-theme="dark"] input,
+    body[data-theme="dark"] select,
+    body[data-theme="dark"] textarea {{
+      background:rgba(9,16,28,.86);
+      border-color:rgba(148,163,184,.18);
+      color:#eef6ff;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }}
+    body[data-theme="dark"] input::placeholder,
+    body[data-theme="dark"] textarea::placeholder {{ color:#7f8fa3; }}
+    body[data-theme="dark"] .table {{ background:rgba(9,16,28,.76); }}
+    body[data-theme="dark"] .table th {{
+      background:rgba(9,16,28,.92);
+      color:#cbd7e6;
+    }}
+    body[data-theme="dark"] .table th,
+    body[data-theme="dark"] .table td,
+    body[data-theme="dark"] .playlist-row,
+    body[data-theme="dark"] .tenant-line {{ border-color:rgba(148,163,184,.12); }}
+    body[data-theme="dark"] .dropzone,
+    body[data-theme="dark"] .codebox {{
+      background:rgba(9,16,28,.86);
+      border-color:rgba(148,163,184,.16);
+      color:#eef6ff;
+    }}
+    body[data-theme="dark"] .metric-card::after {{
+      background:radial-gradient(circle, rgba(148,163,184,.08), transparent 68%);
+    }}
+    body[data-theme="dark"] .screen-url {{ color:#8fa1b7; }}
     .muted {{ color:var(--muted); }}
     .hero {{ display:grid; gap:18px; grid-template-columns: 1.2fr .8fr; margin-bottom:18px; }}
     .stat {{ font-size:44px; font-weight:900; letter-spacing:-.04em; }}
@@ -929,7 +971,7 @@ def brand_css() -> str:
     body[data-theme="dark"] .secondary {{
       color:#eef6ff;
       border-color:rgba(226,232,240,.14);
-      background:rgba(15,23,42,.52);
+      background:rgba(9,16,28,.86);
     }}
     button.danger {{ background:linear-gradient(135deg, #b91c1c, #ef4444); }}
     .table {{
@@ -983,7 +1025,7 @@ def brand_css() -> str:
       text-transform:uppercase;
       font-size:12px;
     }}
-    body[data-theme="dark"] .logo-chip {{ color:#dcfce7; border-color:rgba(34,197,94,.32); background:linear-gradient(135deg, rgba(34,197,94,.18), rgba(56,189,248,.1)); }}
+    body[data-theme="dark"] .logo-chip {{ color:#d7fbe8; border-color:rgba(148,163,184,.16); background:rgba(9,16,28,.86); }}
     .badge {{
       display:inline-flex;
       padding:8px 12px;
@@ -996,9 +1038,9 @@ def brand_css() -> str:
       backdrop-filter: blur(18px);
     }}
     body[data-theme="dark"] .badge {{
-      background:rgba(15,23,42,.52);
+      background:rgba(9,16,28,.86);
       color:#d8fbe6;
-      border-color:rgba(226,232,240,.14);
+      border-color:rgba(148,163,184,.16);
     }}
     .logo-preview {{ width: 100%; max-width: 520px; max-height: 160px; object-fit: contain; border-radius: 0; background: transparent; padding: 0; display:block; }}
     .kicker {{ font-size:12px; color:#fcd34d; text-transform:uppercase; letter-spacing:.18em; font-weight:800; }}
