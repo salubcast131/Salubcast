@@ -81,6 +81,13 @@ PLAYER_HEARTBEAT_SECONDS = int(os.environ.get('SALUBCAST_PLAYER_HEARTBEAT_SECOND
 WEATHER_CACHE_TTL_SECONDS = int(os.environ.get('SALUBCAST_WEATHER_CACHE_TTL_SECONDS', '900'))
 HEALTH_STATUS_TOKEN = os.environ.get('SALUBCAST_HEALTH_TOKEN', '').strip()
 PUBLIC_BASE_URL = os.environ.get('SALUBCAST_PUBLIC_BASE_URL', '').strip().rstrip('/')
+PASSWORD_RESET_TTL_MINUTES = int(os.environ.get('SALUBCAST_PASSWORD_RESET_TTL_MINUTES', '30'))
+SMTP_HOST = os.environ.get('SALUBCAST_SMTP_HOST', '').strip()
+SMTP_PORT = int(os.environ.get('SALUBCAST_SMTP_PORT', '587'))
+SMTP_USER = os.environ.get('SALUBCAST_SMTP_USER', '').strip()
+SMTP_PASSWORD = os.environ.get('SALUBCAST_SMTP_PASSWORD', '')
+SMTP_FROM = os.environ.get('SALUBCAST_SMTP_FROM', '').strip() or SMTP_USER
+SMTP_USE_TLS = os.environ.get('SALUBCAST_SMTP_USE_TLS', '1').strip().lower() in {'1', 'true', 'yes', 'on'}
 _weather_cache: dict[str, tuple[float, dict[str, str]]] = {}
 
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "").strip()
@@ -156,6 +163,34 @@ def verify_password(password: str, salt: str, stored_hash: str) -> tuple[bool, b
     if hmac.compare_digest(legacy, stored_hash):
         return True, True
     return False, False
+
+
+def hash_reset_token(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def send_email(to_email: str, subject: str, body: str) -> bool:
+    if not SMTP_HOST or not SMTP_USER or not SMTP_PASSWORD:
+        print(f"[SalubCast] SMTP niet geconfigureerd; e-mail naar {to_email} niet verstuurd: {subject}")
+        return False
+    import smtplib
+    from email.message import EmailMessage
+
+    message = EmailMessage()
+    message["Subject"] = subject
+    message["From"] = SMTP_FROM or SMTP_USER
+    message["To"] = to_email
+    message.set_content(body)
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as smtp:
+            if SMTP_USE_TLS:
+                smtp.starttls()
+            smtp.login(SMTP_USER, SMTP_PASSWORD)
+            smtp.send_message(message)
+        return True
+    except Exception as exc:
+        print(f"[SalubCast] Versturen van e-mail naar {to_email} mislukt: {exc}")
+        return False
 
 
 def fetch_all(query: str, params: tuple[Any, ...] = ()) -> list[sqlite3.Row]:
@@ -486,6 +521,16 @@ def init_db() -> None:
             published_at TEXT,
             created_at TEXT NOT NULL,
             FOREIGN KEY (feed_id) REFERENCES feeds(id)
+        );
+
+        CREATE TABLE IF NOT EXISTS password_resets (
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            token_hash TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            used_at TEXT,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
         """
     )
