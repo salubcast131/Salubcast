@@ -518,6 +518,7 @@ def init_db() -> None:
             title TEXT NOT NULL,
             link TEXT,
             summary TEXT,
+            image_url TEXT,
             published_at TEXT,
             created_at TEXT NOT NULL,
             FOREIGN KEY (feed_id) REFERENCES feeds(id)
@@ -570,6 +571,8 @@ def init_db() -> None:
     feed_item_cols = {row['name'] for row in conn.execute("PRAGMA table_info(feed_items)").fetchall()}
     if 'summary' not in feed_item_cols:
         conn.execute("ALTER TABLE feed_items ADD COLUMN summary TEXT")
+    if 'image_url' not in feed_item_cols:
+        conn.execute("ALTER TABLE feed_items ADD COLUMN image_url TEXT")
     company_cols = {row['name'] for row in conn.execute("PRAGMA table_info(companies)").fetchall()}
     if 'logo_filename' not in company_cols:
         conn.execute("ALTER TABLE companies ADD COLUMN logo_filename TEXT")
@@ -1609,6 +1612,26 @@ def create_player_package_zip(server_base_url: str, screen_id: str, screen_name:
 
 
 
+def extract_feed_image(entry, summary_html: str) -> str:
+    for media in entry.get("media_content", []) or []:
+        url = (media or {}).get("url")
+        if url:
+            return url
+    for media in entry.get("media_thumbnail", []) or []:
+        url = (media or {}).get("url")
+        if url:
+            return url
+    for link_obj in entry.get("links", []) or []:
+        link_type = str((link_obj or {}).get("type", ""))
+        href = (link_obj or {}).get("href")
+        if href and link_type.startswith("image/"):
+            return href
+    match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', str(summary_html))
+    if match:
+        return match.group(1)
+    return ""
+
+
 def refresh_feed(feed_row) -> int:
     parsed = feedparser.parse(feed_row["url"])
     execute("DELETE FROM feed_items WHERE feed_id = ?", (feed_row["id"],))
@@ -1623,11 +1646,12 @@ def refresh_feed(feed_row) -> int:
             or entry.get("subtitle")
             or ""
         )
+        image_url = extract_feed_image(entry, summary_html)
         summary = re.sub(r"<[^>]+>", " ", str(summary_html))
         summary = " ".join(summary.replace("&nbsp;", " ").split())
         execute(
-            "INSERT INTO feed_items (id, feed_id, title, link, summary, published_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (str(uuid.uuid4()), feed_row["id"], title, link, summary[:1200], published, now_iso()),
+            "INSERT INTO feed_items (id, feed_id, title, link, summary, image_url, published_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (str(uuid.uuid4()), feed_row["id"], title, link, summary[:1200], image_url, published, now_iso()),
         )
         count += 1
     execute("UPDATE feeds SET last_fetched_at = ? WHERE id = ?", (now_iso(), feed_row["id"]))
@@ -1672,8 +1696,8 @@ def get_weather_summary(city: str) -> dict[str, str] | None:
         current = wx.get('current') or {}
         summary = {
             'city': first.get('name') or city,
-            'temperature': f"{round(float(current.get('temperature_2m', 0)))} C",
-            'feels_like': f"{round(float(current.get('apparent_temperature', 0)))} C",
+            'temperature': f"{round(float(current.get('temperature_2m', 0)))}°C",
+            'feels_like': f"{round(float(current.get('apparent_temperature', 0)))}°C",
             'wind': f"{round(float(current.get('wind_speed_10m', 0)))} km/u",
             'condition': weather_code_label(current.get('weather_code')),
         }
@@ -1710,10 +1734,10 @@ def get_feed_page_entries(company_id: str, limit: int = 6) -> tuple[str, list[di
         return "", []
     refresh_feed_if_due(feed)
     items = fetch_all(
-        "SELECT title, link, summary, published_at FROM feed_items WHERE feed_id = ? ORDER BY created_at ASC LIMIT ?",
+        "SELECT title, link, summary, image_url, published_at FROM feed_items WHERE feed_id = ? ORDER BY created_at ASC LIMIT ?",
         (feed["id"], limit),
     )
-    return feed["name"], [{"title": i["title"], "link": i["link"] or "", "summary": i["summary"] or "", "published_at": i["published_at"] or ""} for i in items]
+    return feed["name"], [{"title": i["title"], "link": i["link"] or "", "summary": i["summary"] or "", "image_url": i["image_url"] or "", "published_at": i["published_at"] or ""} for i in items]
 
 
 def _feed_entry_weight(entry: dict[str, str]) -> int:
