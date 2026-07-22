@@ -858,7 +858,7 @@ def brand_css() -> str:
     .brand-sub {{ color:var(--muted); font-size:15px; max-width:58ch; }}
     @media (max-width: 640px) {{
       .brand {{ gap:12px; }}
-      .topbar-logo {{ height:40px; }}
+      .topbar-logo {{ height:56px; }}
     }}
     .header-actions {{ display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap; }}
     .header-actions form {{ display:inline; }}
@@ -1061,7 +1061,7 @@ def brand_css() -> str:
     .dropzone {{ border:1px dashed rgba(148,163,184,.24); border-radius:20px; padding:14px; background:rgba(255,255,255,.02); }}
     .login-shell {{ min-height:100vh; display:grid; place-items:center; padding:24px; }}
     .login-card {{ width:min(100%, 620px); }}
-    .topbar-logo {{ height:52px; width:auto; max-width:220px; object-fit:contain; flex-shrink:0; }}
+    .topbar-logo {{ height:80px; width:auto; max-width:300px; object-fit:contain; flex-shrink:0; }}
     .badge {{
       display:inline-flex;
       padding:8px 12px;
@@ -1195,7 +1195,7 @@ def brand_css() -> str:
       box-shadow:0 30px 80px rgba(0,0,0,.4);
     }}
     .auth-brand {{ display:flex; align-items:center; gap:12px; margin-bottom:4px; }}
-    .auth-brand img {{ height:56px; width:auto; max-width:220px; object-fit:contain; }}
+    .auth-brand img {{ height:84px; width:auto; max-width:280px; object-fit:contain; }}
     .auth-brand-mark {{
       display:inline-grid;
       place-items:center;
