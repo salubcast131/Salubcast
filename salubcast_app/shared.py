@@ -1688,18 +1688,36 @@ def get_weather_summary(city: str) -> dict[str, str] | None:
         wx_url = 'https://api.open-meteo.com/v1/forecast?' + urllib.parse.urlencode({
             'latitude': first.get('latitude'),
             'longitude': first.get('longitude'),
-            'current': 'temperature_2m,apparent_temperature,weather_code,wind_speed_10m',
+            'current': 'temperature_2m,apparent_temperature,weather_code,wind_speed_10m,relative_humidity_2m',
+            'daily': 'temperature_2m_max,temperature_2m_min,sunrise,sunset',
             'timezone': 'auto',
         })
         with urllib.request.urlopen(wx_url, timeout=6) as resp:
             wx = json.loads(resp.read().decode('utf-8'))
         current = wx.get('current') or {}
+        daily = wx.get('daily') or {}
+
+        def daily_first(field: str) -> Any:
+            values = daily.get(field) or []
+            return values[0] if values else None
+
+        def format_clock(value: str | None) -> str:
+            parsed = parse_iso(value) if value else None
+            return parsed.strftime('%H:%M') if parsed else '--:--'
+
+        high = daily_first('temperature_2m_max')
+        low = daily_first('temperature_2m_min')
         summary = {
             'city': first.get('name') or city,
             'temperature': f"{round(float(current.get('temperature_2m', 0)))}°C",
             'feels_like': f"{round(float(current.get('apparent_temperature', 0)))}°C",
             'wind': f"{round(float(current.get('wind_speed_10m', 0)))} km/u",
+            'humidity': f"{round(float(current.get('relative_humidity_2m', 0)))}%",
             'condition': weather_code_label(current.get('weather_code')),
+            'high': f"{round(float(high))}°C" if high is not None else '--',
+            'low': f"{round(float(low))}°C" if low is not None else '--',
+            'sunrise': format_clock(daily_first('sunrise')),
+            'sunset': format_clock(daily_first('sunset')),
         }
         _weather_cache[key] = (now_ts, summary)
         return summary
