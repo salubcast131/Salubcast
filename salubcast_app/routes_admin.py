@@ -203,7 +203,10 @@ def companies_manager() -> str:
 @app.route("/users", methods=["GET", "POST"])
 @admin_required
 def users_manager() -> str:
-    company_id = current_company_id()
+    company_id = resolve_current_company_id()
+    if not company_id:
+        flash("Geen geldig bedrijf geselecteerd. Log opnieuw in of kies een bedrijf.")
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         action = request.form.get("action", "create_user")
         if action == "create_user":
@@ -352,7 +355,10 @@ def users_manager() -> str:
 @app.route("/feeds", methods=["GET", "POST"])
 @content_admin_required
 def feeds_manager() -> str:
-    company_id = current_company_id()
+    company_id = resolve_current_company_id()
+    if not company_id:
+        flash("Geen geldig bedrijf geselecteerd. Log opnieuw in of kies een bedrijf.")
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         action = request.form.get("action", "create_feed")
         if action == "create_feed":
@@ -750,7 +756,10 @@ def monitoring_page() -> str:
 @app.route("/layout-studio", methods=["GET", "POST"])
 @content_admin_required
 def layout_studio() -> str:
-    company_id = current_company_id()
+    company_id = resolve_current_company_id()
+    if not company_id:
+        flash("Geen geldig bedrijf geselecteerd. Log opnieuw in of kies een bedrijf.")
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         screen_id = request.form.get("screen_id", "").strip()
         orientation = request.form.get("orientation", "landscape").strip().lower()
@@ -835,7 +844,9 @@ def layout_studio() -> str:
 @app.route("/")
 @login_required
 def dashboard() -> str:
-    company_id = current_company_id()
+    company_id = resolve_current_company_id()
+    if not company_id:
+        return render_shell("Dashboard", '<div class="card"><h1>Geen bedrijf gevonden</h1><p class="muted">Er bestaat nog geen bedrijf in dit systeem. Registreer een nieuw bedrijf of vraag een superadmin om er een aan te maken.</p></div>')
     company = fetch_one("SELECT * FROM companies WHERE id = ? LIMIT 1", (company_id,))
     media_count = fetch_one("SELECT COUNT(*) AS c FROM media WHERE company_id = ?", (company_id,))['c']
     screens = fetch_all("SELECT * FROM screens WHERE company_id = ? ORDER BY name", (company_id,))
@@ -1059,7 +1070,10 @@ def playlist_manager() -> str:
 @app.route("/screens", methods=["GET", "POST"])
 @admin_required
 def screens_manager() -> str:
-    company_id = current_company_id()
+    company_id = resolve_current_company_id()
+    if not company_id:
+        flash("Geen geldig bedrijf geselecteerd. Log opnieuw in of kies een bedrijf.")
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         action = request.form.get("action", "create")
         if action == "create":
@@ -1172,7 +1186,10 @@ def screens_manager() -> str:
 @app.route("/schedules", methods=["GET", "POST"])
 @admin_required
 def schedules_manager() -> str:
-    company_id = current_company_id()
+    company_id = resolve_current_company_id()
+    if not company_id:
+        flash("Geen geldig bedrijf geselecteerd. Log opnieuw in of kies een bedrijf.")
+        return redirect(url_for("dashboard"))
     if request.method == "POST":
         action = request.form.get("action", "create")
         schedule_id = request.form.get("schedule_id", "").strip()

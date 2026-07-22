@@ -195,23 +195,27 @@ def send_email(to_email: str, subject: str, body: str) -> bool:
 
 def fetch_all(query: str, params: tuple[Any, ...] = ()) -> list[sqlite3.Row]:
     conn = db()
-    rows = conn.execute(query, params).fetchall()
-    conn.close()
-    return rows
+    try:
+        return conn.execute(query, params).fetchall()
+    finally:
+        conn.close()
 
 
 def fetch_one(query: str, params: tuple[Any, ...] = ()) -> sqlite3.Row | None:
     conn = db()
-    row = conn.execute(query, params).fetchone()
-    conn.close()
-    return row
+    try:
+        return conn.execute(query, params).fetchone()
+    finally:
+        conn.close()
 
 
 def execute(query: str, params: tuple[Any, ...] = ()) -> None:
     conn = db()
-    conn.execute(query, params)
-    conn.commit()
-    conn.close()
+    try:
+        conn.execute(query, params)
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def company_logo_dir() -> Path:
