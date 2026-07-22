@@ -49,24 +49,38 @@ def register() -> str:
 
     content = render_template_string(
         """
-        <div class="login-shell">
-          <div class="card login-card">
-            <div class="kicker">SalubCast onboarding</div>
+        <div class="auth-card">
+          """ + auth_brand_block() + """
+          <div class="auth-head">
             <h1>Maak een account</h1>
-            <p class="muted">Open registratie maakt altijd een nieuw bedrijf aan. Voor toegang tot een bestaand bedrijf moet een admin je account aanmaken.</p>
-            <form method="post">
-              <input name="full_name" placeholder="Volledige naam">
-              <input name="email" type="email" placeholder="E-mailadres">
-              <input name="password" type="password" placeholder="Wachtwoord">
-              <input name="new_company_name" placeholder="Nieuw bedrijf, bijv. NewAudioVisuals">
-              <button type="submit">Account maken</button>
-            </form>
-            <div class="inline"><a href="{{ url_for('login') }}"><button class="secondary" style="width:auto;">Terug naar login</button></a></div>
+            <p>Open registratie maakt altijd een nieuw bedrijf aan. Heb je al een bedrijf? Vraag een admin om je account aan te maken.</p>
+          </div>
+          <form method="post">
+            <div class="field">
+              <label for="full_name">Volledige naam</label>
+              <input id="full_name" name="full_name" placeholder="Bijv. Jasmijn de Vries" required>
+            </div>
+            <div class="field">
+              <label for="email">E-mailadres</label>
+              <input id="email" name="email" type="email" placeholder="jij@bedrijf.nl" required>
+            </div>
+            <div class="field">
+              <label for="password">Wachtwoord</label>
+              <input id="password" name="password" type="password" placeholder="Minimaal 8 tekens" required>
+            </div>
+            <div class="field">
+              <label for="new_company_name">Nieuw bedrijf</label>
+              <input id="new_company_name" name="new_company_name" placeholder="Bijv. NewAudioVisuals" required>
+            </div>
+            <button class="auth-submit" type="submit">Account maken</button>
+          </form>
+          <div class="auth-links">
+            <a href="{{ url_for('login') }}">&larr; Terug naar login</a>
           </div>
         </div>
         """,
     )
-    return render_shell("Registreren", content)
+    return render_auth_shell("Registreren", content)
 
 @app.route("/login", methods=["GET", "POST"])
 def login() -> str:
@@ -98,23 +112,30 @@ def login() -> str:
             return redirect(url_for('dashboard'))
         flash("Inloggen mislukt. Check je gegevens of accountstatus.")
     content = """
-    <div class="login-shell">
-      <div class="card login-card">
-        <div class="kicker">SalubCast access</div>
-        <h1>Log in</h1>
-        <form method="post">
-          <input name="email" type="email" placeholder="E-mailadres">
-          <input name="password" type="password" placeholder="Wachtwoord">
-          <button type="submit">Inloggen</button>
-        </form>
-        <div class="inline">
-          <a href="{{ url_for('register') }}"><button class="secondary" style="width:auto;">Account registreren</button></a>
-          <a href="{{ url_for('forgot_password') }}"><button class="secondary" style="width:auto;">Wachtwoord vergeten</button></a>
+    <div class="auth-card">
+      """ + auth_brand_block() + """
+      <div class="auth-head">
+        <h1>Welkom terug</h1>
+        <p>Log in om je schermen en content te beheren.</p>
+      </div>
+      <form method="post">
+        <div class="field">
+          <label for="email">E-mailadres</label>
+          <input id="email" name="email" type="email" placeholder="jij@bedrijf.nl" required>
         </div>
+        <div class="field">
+          <label for="password">Wachtwoord</label>
+          <input id="password" name="password" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
+        </div>
+        <button class="auth-submit" type="submit">Inloggen</button>
+      </form>
+      <div class="auth-links">
+        <a href="{{ url_for('forgot_password') }}">Wachtwoord vergeten?</a>
+        <a href="{{ url_for('register') }}">Account aanmaken</a>
       </div>
     </div>
     """
-    return render_shell("Login", content)
+    return render_auth_shell("Login", content)
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout() -> Response:
@@ -147,20 +168,25 @@ def forgot_password() -> str:
         flash("Als dit e-mailadres bij ons bekend is, hebben we een resetlink verstuurd.")
         return redirect(url_for("forgot_password"))
     content = """
-    <div class="login-shell">
-      <div class="card login-card">
-        <div class="kicker">SalubCast access</div>
+    <div class="auth-card">
+      """ + auth_brand_block() + """
+      <div class="auth-head">
         <h1>Wachtwoord vergeten</h1>
-        <p class="muted">Vul je e-mailadres in. Als dit adres bij ons bekend is, sturen we een resetlink.</p>
-        <form method="post">
-          <input name="email" type="email" placeholder="E-mailadres" required>
-          <button type="submit">Resetlink versturen</button>
-        </form>
-        <div class="inline"><a href="{{ url_for('login') }}"><button class="secondary" style="width:auto;">Terug naar login</button></a></div>
+        <p>Vul je e-mailadres in. Als dit adres bij ons bekend is, sturen we een resetlink.</p>
+      </div>
+      <form method="post">
+        <div class="field">
+          <label for="email">E-mailadres</label>
+          <input id="email" name="email" type="email" placeholder="jij@bedrijf.nl" required>
+        </div>
+        <button class="auth-submit" type="submit">Resetlink versturen</button>
+      </form>
+      <div class="auth-links">
+        <a href="{{ url_for('login') }}">&larr; Terug naar login</a>
       </div>
     </div>
     """
-    return render_shell("Wachtwoord vergeten", content)
+    return render_auth_shell("Wachtwoord vergeten", content)
 
 @app.route("/reset-password/<token>", methods=["GET", "POST"])
 def reset_password(token: str) -> str:
@@ -169,16 +195,16 @@ def reset_password(token: str) -> str:
     valid = bool(reset_row) and not reset_row["used_at"] and expires_at is not None and datetime.now(timezone.utc) <= expires_at
     if not valid:
         content = """
-        <div class="login-shell">
-          <div class="card login-card">
-            <div class="kicker">SalubCast access</div>
+        <div class="auth-card">
+          """ + auth_brand_block() + """
+          <div class="auth-head">
             <h1>Link ongeldig</h1>
-            <p class="muted">Deze resetlink is ongeldig, al gebruikt of verlopen.</p>
-            <div class="inline"><a href="{{ url_for('forgot_password') }}"><button style="width:auto;">Nieuwe link aanvragen</button></a></div>
+            <p>Deze resetlink is ongeldig, al gebruikt of verlopen.</p>
           </div>
+          <a href="{{ url_for('forgot_password') }}"><button class="auth-submit" type="button">Nieuwe link aanvragen</button></a>
         </div>
         """
-        return render_shell("Link ongeldig", content)
+        return render_auth_shell("Link ongeldig", content)
 
     if request.method == "POST":
         password = request.form.get("password", "").strip()
@@ -198,19 +224,26 @@ def reset_password(token: str) -> str:
         return redirect(url_for("login"))
 
     content = """
-    <div class="login-shell">
-      <div class="card login-card">
-        <div class="kicker">SalubCast access</div>
+    <div class="auth-card">
+      """ + auth_brand_block() + """
+      <div class="auth-head">
         <h1>Nieuw wachtwoord instellen</h1>
-        <form method="post">
-          <input name="password" type="password" placeholder="Nieuw wachtwoord" required minlength="8">
-          <input name="confirm_password" type="password" placeholder="Bevestig wachtwoord" required minlength="8">
-          <button type="submit">Wachtwoord instellen</button>
-        </form>
+        <p>Kies een sterk wachtwoord van minimaal 8 tekens.</p>
       </div>
+      <form method="post">
+        <div class="field">
+          <label for="password">Nieuw wachtwoord</label>
+          <input id="password" name="password" type="password" placeholder="Minimaal 8 tekens" required minlength="8">
+        </div>
+        <div class="field">
+          <label for="confirm_password">Bevestig wachtwoord</label>
+          <input id="confirm_password" name="confirm_password" type="password" placeholder="Herhaal je wachtwoord" required minlength="8">
+        </div>
+        <button class="auth-submit" type="submit">Wachtwoord instellen</button>
+      </form>
     </div>
     """
-    return render_shell("Nieuw wachtwoord", content)
+    return render_auth_shell("Nieuw wachtwoord", content)
 
 @app.route("/branding", methods=["GET", "POST"])
 @login_required

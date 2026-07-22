@@ -1139,6 +1139,114 @@ def brand_css() -> str:
       .header-actions {{ justify-content:flex-start; }}
       .nav {{ border-radius:22px; }}
     }}
+
+    /* Auth pages (login, register, forgot/reset password) */
+    .auth-shell {{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:32px 24px;
+      position:relative;
+      overflow:hidden;
+    }}
+    .auth-shell::before,
+    .auth-shell::after {{
+      content:'';
+      position:fixed;
+      width:46vw;
+      height:46vw;
+      max-width:620px;
+      max-height:620px;
+      border-radius:50%;
+      pointer-events:none;
+      z-index:0;
+      filter:blur(10px);
+    }}
+    .auth-shell::before {{
+      top:-16vw;
+      left:-12vw;
+      background:radial-gradient(circle, rgba(16,185,129,.22), transparent 70%);
+    }}
+    .auth-shell::after {{
+      bottom:-18vw;
+      right:-10vw;
+      background:radial-gradient(circle, rgba(15,118,110,.16), transparent 70%);
+    }}
+    .auth-theme-toggle {{
+      position:fixed;
+      top:22px;
+      right:22px;
+      z-index:2;
+    }}
+    .auth-flash {{
+      position:relative;
+      z-index:1;
+      width:min(100%, 440px);
+      margin:0 auto 18px;
+    }}
+    .auth-card {{
+      position:relative;
+      z-index:1;
+      width:min(100%, 440px);
+      background:linear-gradient(180deg, var(--panel-strong), var(--panel-soft));
+      border:1px solid rgba(255,255,255,.6);
+      border-radius:28px;
+      padding:40px 36px;
+      box-shadow:0 30px 80px rgba(15,23,42,.14);
+      backdrop-filter: blur(36px) saturate(180%);
+      -webkit-backdrop-filter: blur(36px) saturate(180%);
+      display:grid;
+      gap:22px;
+    }}
+    body[data-theme="dark"] .auth-card {{
+      background:linear-gradient(180deg, rgba(9,16,28,.92), rgba(9,16,28,.78));
+      border-color:rgba(148,163,184,.16);
+      box-shadow:0 30px 80px rgba(0,0,0,.4);
+    }}
+    .auth-brand {{ display:flex; align-items:center; gap:12px; }}
+    .auth-brand img {{ height:34px; width:auto; max-width:140px; object-fit:contain; }}
+    .auth-brand-mark {{
+      display:inline-grid;
+      place-items:center;
+      width:34px;
+      height:34px;
+      border-radius:11px;
+      background:linear-gradient(135deg, #0f766e, #10b981);
+      color:#fff;
+      font-weight:900;
+      font-size:16px;
+      flex-shrink:0;
+    }}
+    .auth-brand-name {{ font-weight:900; letter-spacing:-.02em; font-size:16px; }}
+    .auth-head {{ display:grid; gap:6px; }}
+    .auth-head h1 {{ margin:0; font-size:1.6rem; }}
+    .auth-head p {{ margin:0; color:var(--muted); font-size:14.5px; line-height:1.5; }}
+    .auth-card form {{ gap:16px; }}
+    .field {{ display:grid; gap:7px; text-align:left; }}
+    .field label {{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }}
+    .field input {{ margin:0; }}
+    .auth-submit {{ margin-top:4px; }}
+    .auth-links {{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      font-size:13.5px;
+    }}
+    .auth-links a {{ color:var(--accent2); font-weight:700; }}
+    .auth-links a:hover {{ color:var(--accent); text-decoration:underline; }}
+    body[data-theme="dark"] .auth-links a {{ color:#5eead4; }}
+    .auth-note {{ text-align:center; font-size:13px; color:var(--muted); }}
+    @media (max-width: 480px) {{
+      .auth-card {{ padding:30px 24px; border-radius:22px; }}
+      .auth-shell {{ padding:20px 16px; }}
+    }}
     """
 
 
@@ -1248,6 +1356,74 @@ def render_shell(title: str, content: str) -> str:
     """
     return render_template_string(template, title=title)
 
+
+def auth_brand_block() -> str:
+    if BRAND_LOGO.exists():
+        return f'<div class="auth-brand"><img src="/branding_logo.png?{int(time.time())}" alt="{BRAND["name"]}"></div>'
+    return f'<div class="auth-brand"><span class="auth-brand-mark">{BRAND["name"][0]}</span><span class="auth-brand-name">{BRAND["name"]}</span></div>'
+
+
+def render_auth_shell(title: str, content: str) -> str:
+    template = f"""
+    <!doctype html>
+    <html lang="nl">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{{{{ title }}}}</title>
+      <style>{brand_css()}</style>
+    </head>
+    <body data-theme="light">
+      <button type="button" class="theme-toggle auth-theme-toggle" id="themeToggle" aria-label="Thema wisselen" aria-pressed="false">Donker</button>
+      <div class="auth-shell">
+        <div style="width:min(100%, 440px); display:grid; gap:0;">
+          {{% with messages = get_flashed_messages() %}}
+            {{% if messages %}}
+            <div class="auth-flash">
+              {{% for message in messages %}}
+                <div class="flash">{{{{ message }}}}</div>
+              {{% endfor %}}
+            </div>
+            {{% endif %}}
+          {{% endwith %}}
+          {content}
+        </div>
+      </div>
+      <script>
+      (function() {{
+        const key = 'salubcast-theme';
+        const button = document.getElementById('themeToggle');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const saved = localStorage.getItem(key);
+        function applyTheme(theme) {{
+          document.body.dataset.theme = theme;
+          if (button) {{
+            button.textContent = theme === 'dark' ? 'Licht' : 'Donker';
+            button.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+          }}
+        }}
+        applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+        if (button) {{
+          button.addEventListener('click', () => {{
+            const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem(key, next);
+            applyTheme(next);
+          }});
+        }}
+      }})();
+      document.querySelectorAll('form[method="post"], form:not([method])').forEach((form) => {{
+        if (form.querySelector('input[name="_csrf_token"]')) return;
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '_csrf_token';
+        input.value = {{{{ csrf_token()|tojson }}}};
+        form.appendChild(input);
+      }});
+      </script>
+    </body>
+    </html>
+    """
+    return render_template_string(template, title=title)
 
 
 def create_player_package_zip(server_base_url: str, screen_id: str, screen_name: str, activation_code: str, screen_token: str) -> BytesIO:
