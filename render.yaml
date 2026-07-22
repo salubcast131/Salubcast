@@ -60,6 +60,16 @@ services:
         sync: false
       - key: STRIPE_PORTAL_CONFIGURATION_ID
         sync: false
+      - key: SALUBCAST_SMTP_HOST
+        sync: false
+      - key: SALUBCAST_SMTP_PORT
+        value: "587"
+      - key: SALUBCAST_SMTP_USER
+        sync: false
+      - key: SALUBCAST_SMTP_PASSWORD
+        sync: false
+      - key: SALUBCAST_SMTP_FROM
+        sync: false
     disks:
       - name: salubcast-data
         mountPath: /var/data/salubcast
