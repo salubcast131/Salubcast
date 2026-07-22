@@ -847,14 +847,19 @@ def brand_css() -> str:
       backdrop-filter: blur(34px) saturate(180%);
       -webkit-backdrop-filter: blur(34px) saturate(180%);
     }}
-    .brand {{ display:flex; flex-direction:column; gap:8px; max-width:760px; }}
+    .brand {{ display:flex; align-items:center; gap:18px; max-width:760px; }}
+    .brand-text {{ display:grid; gap:6px; }}
     .brand-title {{
-      font-size: clamp(1.7rem, 2.2vw, 2.55rem);
+      font-size: clamp(1.5rem, 1.9vw, 2.15rem);
       font-weight: 850;
       letter-spacing:-.03em;
-      line-height:.98;
+      line-height:1.05;
     }}
-    .brand-sub {{ color:var(--muted); font-size:16px; max-width:58ch; }}
+    .brand-sub {{ color:var(--muted); font-size:15px; max-width:58ch; }}
+    @media (max-width: 640px) {{
+      .brand {{ gap:12px; }}
+      .topbar-logo {{ height:40px; }}
+    }}
     .header-actions {{ display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap; }}
     .header-actions form {{ display:inline; }}
     .shell-action, .theme-toggle {{
@@ -1056,21 +1061,7 @@ def brand_css() -> str:
     .dropzone {{ border:1px dashed rgba(148,163,184,.24); border-radius:20px; padding:14px; background:rgba(255,255,255,.02); }}
     .login-shell {{ min-height:100vh; display:grid; place-items:center; padding:24px; }}
     .login-card {{ width:min(100%, 620px); }}
-    .logo-chip {{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:9px 14px;
-      border-radius:999px;
-      border:1px solid rgba(34,197,94,.25);
-      background:rgba(255,255,255,.44);
-      color:#0f766e;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-size:12px;
-    }}
-    body[data-theme="dark"] .logo-chip {{ color:#d7fbe8; border-color:rgba(148,163,184,.16); background:rgba(9,16,28,.86); }}
+    .topbar-logo {{ height:52px; width:auto; max-width:220px; object-fit:contain; flex-shrink:0; }}
     .badge {{
       display:inline-flex;
       padding:8px 12px;
@@ -1203,21 +1194,21 @@ def brand_css() -> str:
       border-color:rgba(148,163,184,.16);
       box-shadow:0 30px 80px rgba(0,0,0,.4);
     }}
-    .auth-brand {{ display:flex; align-items:center; gap:12px; }}
-    .auth-brand img {{ height:34px; width:auto; max-width:140px; object-fit:contain; }}
+    .auth-brand {{ display:flex; align-items:center; gap:12px; margin-bottom:4px; }}
+    .auth-brand img {{ height:56px; width:auto; max-width:220px; object-fit:contain; }}
     .auth-brand-mark {{
       display:inline-grid;
       place-items:center;
-      width:34px;
-      height:34px;
-      border-radius:11px;
+      width:48px;
+      height:48px;
+      border-radius:14px;
       background:linear-gradient(135deg, #0f766e, #10b981);
       color:#fff;
       font-weight:900;
-      font-size:16px;
+      font-size:22px;
       flex-shrink:0;
     }}
-    .auth-brand-name {{ font-weight:900; letter-spacing:-.02em; font-size:16px; }}
+    .auth-brand-name {{ font-weight:900; letter-spacing:-.02em; font-size:19px; }}
     .auth-head {{ display:grid; gap:6px; }}
     .auth-head h1 {{ margin:0; font-size:1.6rem; }}
     .auth-head p {{ margin:0; color:var(--muted); font-size:14.5px; line-height:1.5; }}
@@ -1254,9 +1245,9 @@ def render_shell(title: str, content: str) -> str:
     logo_html = ""
     company_logo_url = current_company_branding_url()
     if company_logo_url:
-        logo_html = f'<img src="{company_logo_url}" class="logo-preview">'
+        logo_html = f'<img src="{company_logo_url}" class="topbar-logo">'
     elif BRAND_LOGO.exists():
-        logo_html = '<img src="/branding_logo.png?%d" class="logo-preview">' % int(time.time())
+        logo_html = '<img src="/branding_logo.png?%d" class="topbar-logo">' % int(time.time())
     template = f"""
     <!doctype html>
     <html lang="nl">
@@ -1270,10 +1261,11 @@ def render_shell(title: str, content: str) -> str:
       <div class="wrap">
         <div class="topbar">
           <div class="brand">
-            <div class="logo-chip">* {BRAND['name']}</div>
-            <div class="brand-title">{BRAND['name']} Control Center</div>
-            <div class="brand-sub">{BRAND['tagline']}</div>
             {logo_html}
+            <div class="brand-text">
+              <div class="brand-title">{BRAND['name']} Control Center</div>
+              <div class="brand-sub">{BRAND['tagline']}</div>
+            </div>
           </div>
           {{% if session.get('user_id') %}}
           <div class="header-actions">
