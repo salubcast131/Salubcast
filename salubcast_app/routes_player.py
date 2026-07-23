@@ -358,7 +358,7 @@ clip-path: polygon(8% 0, 22% 0, 16% 100%, 0 100%, 8% 0, 40% 0, 54% 0, 48% 100%, 
 .weather-stat-card {{ background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:20px; padding:18px; backdrop-filter: blur(16px); display:grid; gap:6px; box-shadow:0 14px 30px rgba(0,0,0,.16); }}
 .weather-stat-card .weather-stat-label {{ font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:#93c5fd; font-weight:800; display:flex; align-items:center; gap:6px; }}
 .weather-stat-card .weather-stat-value {{ font-size:24px; font-weight:900; }}
-.weather-clock {{ position:absolute; top:clamp(24px,3vw,44px); right:clamp(24px,3vw,52px); text-align:right; z-index:2; animation: weatherFadeUp .6s ease both; }}
+.weather-clock {{ position:absolute; top:clamp(28px,4vw,64px); right:clamp(28px,4vw,64px); max-width:36vw; box-sizing:border-box; text-align:right; z-index:2; animation: weatherFadeUp .6s ease both; }}
 .weather-clock-time {{ font-size:clamp(28px,2.6vw,40px); font-weight:900; font-variant-numeric:tabular-nums; }}
 .weather-clock-date {{ font-size:14px; color:#bfdbfe; text-transform:capitalize; }}
 @keyframes weatherFadeUp {{ from {{ opacity:0; transform:translateY(18px); }} to {{ opacity:1; transform:none; }} }}
