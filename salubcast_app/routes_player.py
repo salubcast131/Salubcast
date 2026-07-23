@@ -272,13 +272,13 @@ radial-gradient(circle at 18% 10%, rgba(255,255,255,.08), transparent 24%); }}
 .feed-card.lead {{ grid-row: span 2; background:linear-gradient(180deg, rgba(34,197,94,.18), rgba(255,255,255,.05)); border-color:rgba(34,197,94,.28); min-height:456px; }}
 .feed-page.layout-headline-list .feed-card.lead,
 .feed-page.layout-compact .feed-card.lead {{ grid-row:auto; min-height:unset; }}
-.feed-card h3 {{ margin:0; font-size:31px; line-height:1.04; letter-spacing:-.04em; position:relative; z-index:1; }}
+.feed-card h3 {{ margin:0; font-size:28px; line-height:1.1; letter-spacing:-.04em; position:relative; z-index:1; }}
 .feed-card.lead h3 {{ font-size:44px; }}
 .feed-card p {{ margin:0; color:#cbd5e1; font-size:15px; opacity:.9; position:relative; z-index:1; }}
 .feed-card .feed-index {{ display:inline-flex; align-items:center; gap:8px; color:#fde68a; font-size:13px; letter-spacing:.16em; text-transform:uppercase; font-weight:900; position:relative; z-index:1; }}
 .feed-card .feed-story {{ color:#eff6ff; font-size:18px; line-height:1.3; opacity:.98; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; position:relative; z-index:1; min-height:0; }}
 .feed-card.lead .feed-story {{ font-size:25px; -webkit-line-clamp:7; }}
-.feed-card:not(.lead) h3 {{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }}
+.feed-card:not(.lead) h3 {{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }}
 .feed-card-media {{ width:100%; height:150px; border-radius:18px; overflow:hidden; position:relative; z-index:1; background:rgba(255,255,255,.06); }}
 .feed-card-media-bg {{ position:absolute; inset:-14px; background-size:cover; background-position:center; filter:blur(22px) brightness(.55) saturate(1.15); transform:scale(1.12); }}
 .feed-card-media img {{ position:relative; z-index:1; width:100%; height:100%; object-fit:contain; object-position:center; display:block; image-rendering:auto; background:none; }}
