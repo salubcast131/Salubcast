@@ -1061,6 +1061,7 @@ def brand_css() -> str:
       background:linear-gradient(180deg, rgba(5,46,22,.95), rgba(20,83,45,.78));
       border:1px solid #14532d;
       box-shadow:0 14px 34px rgba(0,0,0,.18);
+      color:#f0fdf4;
     }}
     .media-preview {{ max-height:84px; max-width:132px; border-radius:14px; }}
     .inline {{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }}
