@@ -276,7 +276,7 @@ radial-gradient(circle at 18% 10%, rgba(255,255,255,.08), transparent 24%); }}
 .feed-card.lead h3 {{ font-size:44px; }}
 .feed-card p {{ margin:0; color:#cbd5e1; font-size:15px; opacity:.9; position:relative; z-index:1; }}
 .feed-card .feed-index {{ display:inline-flex; align-items:center; gap:8px; color:#fde68a; font-size:13px; letter-spacing:.16em; text-transform:uppercase; font-weight:900; position:relative; z-index:1; }}
-.feed-card .feed-story {{ color:#eff6ff; font-size:18px; line-height:1.3; opacity:.98; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; position:relative; z-index:1; min-height:0; }}
+.feed-card .feed-story {{ color:#eff6ff; font-size:18px; line-height:1.3; opacity:.98; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; position:relative; z-index:1; min-height:0; }}
 .feed-card.lead .feed-story {{ font-size:25px; -webkit-line-clamp:7; }}
 .feed-card:not(.lead) h3 {{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }}
 .feed-card-media {{ width:100%; height:150px; border-radius:18px; overflow:hidden; position:relative; z-index:1; background:rgba(255,255,255,.06); }}
