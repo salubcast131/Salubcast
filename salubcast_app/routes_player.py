@@ -268,7 +268,7 @@ radial-gradient(circle at 18% 10%, rgba(255,255,255,.08), transparent 24%); }}
 .feed-page.layout-compact .feed-grid {{ grid-template-columns: 1fr 1fr; gap:14px; }}
 .feed-page.layout-compact .feed-card {{ padding:18px 20px; border-radius:20px; min-height:200px; }}
 .feed-page.layout-compact .feed-card h3 {{ font-size:28px; }}
-.feed-card {{ background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.14); border-radius:24px; padding:22px; box-shadow:0 18px 38px rgba(0,0,0,.24); overflow:hidden; height:100%; min-height:0; display:grid; grid-template-rows:auto auto auto minmax(0,1fr) auto; gap:12px; position:relative; backdrop-filter: blur(18px); }}
+.feed-card {{ background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.14); border-radius:24px; padding:22px; box-shadow:0 18px 38px rgba(0,0,0,.24); overflow:hidden; height:auto; max-height:100%; min-height:0; align-self:center; display:grid; gap:12px; align-content:start; position:relative; backdrop-filter: blur(18px); }}
 .feed-card::before {{ content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.05), transparent 22%, transparent 78%, rgba(255,255,255,.03)); }}
 .feed-card.lead {{ background:linear-gradient(180deg, rgba(34,197,94,.18), rgba(255,255,255,.05)); border-color:rgba(34,197,94,.28); }}
 .feed-page.layout-headline-list .feed-card.lead,
