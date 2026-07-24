@@ -136,7 +136,7 @@ def resolve_active_playlist_for_screen(screen: sqlite3.Row) -> dict[str, Any] | 
     if screen['insert_feed_pages'] == 1:
         orientation = screen['orientation'] or 'landscape'
         feed_limit = 9 if orientation == 'portrait' else 8
-        per_page = 3 if orientation == 'portrait' else 4
+        per_page = 3
         feed_name, feed_entries = get_feed_page_entries(screen['company_id'], feed_limit)
         weather_summary = weather_for_screen(screen)
         feed_pages = chunk_feed_entries(feed_entries, per_page, orientation) if feed_entries else []
@@ -230,7 +230,7 @@ def player_page() -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{BRAND['name']} Player - {screen_name}</title>
-  <style>html, body {{ margin:0; width:100%; height:100%; overflow:hidden; background:#02060c; color:white; font-family:"Segoe UI Variable Display","Segoe UI","Trebuchet MS",sans-serif; }} #stage {{ position:fixed; inset:0; background:#000; overflow:hidden; }} .layer {{ position:absolute; inset:0; opacity:0; transition: opacity 900ms ease-in-out; display:flex; align-items:center; justify-content:center; background:#000; }} .layer.active {{ opacity:1; }} .layer img, .layer video, .layer iframe {{ width:100%; height:100%; object-fit:contain; border:0; background:#000; }} #empty {{ color:#94a3b8; font-size:40px; text-align:center; max-width:20ch; line-height:1.2; }} #badge {{ position:fixed; top:18px; right:18px; background:linear-gradient(180deg, rgba(8,18,30,.48), rgba(8,18,30,.3)); border:1px solid rgba(255,255,255,.22); padding:10px 16px; border-radius:999px; font-size:13px; letter-spacing:.08em; text-transform:uppercase; font-weight:800; z-index:10; backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); }} body.badge-top-left #badge {{ top:18px; left:18px; right:auto; bottom:auto; }} body.badge-bottom-right #badge {{ bottom:18px; right:18px; top:auto; left:auto; }} body.badge-bottom-left #badge {{ bottom:18px; left:18px; top:auto; right:auto; }} body.badge-hidden #badge {{ display:none; }} body.feed-active #badge {{ display:none; }} body.feed-active #newsTicker {{ display:none !important; }} body.weather-active #badge {{ display:none; }} #newsTicker {{ position:fixed; left:24px; right:24px; bottom:18px; z-index:20; background:linear-gradient(90deg, rgba(8,18,30,.42), rgba(8,18,30,.26)); border:1px solid rgba(255,255,255,.24); color:white; padding:14px 22px; font-size:23px; border-radius:999px; white-space:nowrap; overflow:hidden; display:none; box-shadow:0 18px 48px rgba(0,0,0,.18); backdrop-filter: blur(26px) saturate(170%); -webkit-backdrop-filter: blur(26px) saturate(170%); }} #newsTickerInner {{ display:inline-block; padding-left:100%; animation:tickerMove 60s linear infinite; font-weight:750; letter-spacing:0; text-shadow:0 1px 12px rgba(0,0,0,.34); }} .feed-page {{ width:100%; height:100%; display:grid; grid-template-rows:auto minmax(0, auto); gap:22px; padding:clamp(28px,4vw,56px); align-content:center; justify-content:center; position:relative; overflow:hidden; background:
+  <style>html, body {{ margin:0; width:100%; height:100%; overflow:hidden; background:#02060c; color:white; font-family:"Segoe UI Variable Display","Segoe UI","Trebuchet MS",sans-serif; }} #stage {{ position:fixed; inset:0; background:#000; overflow:hidden; }} .layer {{ position:absolute; inset:0; opacity:0; transition: opacity 900ms ease-in-out; display:flex; align-items:center; justify-content:center; background:#000; }} .layer.active {{ opacity:1; }} .layer img, .layer video, .layer iframe {{ width:100%; height:100%; object-fit:contain; border:0; background:#000; }} #empty {{ color:#94a3b8; font-size:40px; text-align:center; max-width:20ch; line-height:1.2; }} #badge {{ position:fixed; top:18px; right:18px; background:linear-gradient(180deg, rgba(8,18,30,.48), rgba(8,18,30,.3)); border:1px solid rgba(255,255,255,.22); padding:10px 16px; border-radius:999px; font-size:13px; letter-spacing:.08em; text-transform:uppercase; font-weight:800; z-index:10; backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); }} body.badge-top-left #badge {{ top:18px; left:18px; right:auto; bottom:auto; }} body.badge-bottom-right #badge {{ bottom:18px; right:18px; top:auto; left:auto; }} body.badge-bottom-left #badge {{ bottom:18px; left:18px; top:auto; right:auto; }} body.badge-hidden #badge {{ display:none; }} body.feed-active #badge {{ display:none; }} body.feed-active #newsTicker {{ display:none !important; }} body.weather-active #badge {{ display:none; }} #newsTicker {{ position:fixed; left:24px; right:24px; bottom:18px; z-index:20; background:linear-gradient(90deg, rgba(8,18,30,.42), rgba(8,18,30,.26)); border:1px solid rgba(255,255,255,.24); color:white; padding:14px 22px; font-size:23px; border-radius:999px; white-space:nowrap; overflow:hidden; display:none; box-shadow:0 18px 48px rgba(0,0,0,.18); backdrop-filter: blur(26px) saturate(170%); -webkit-backdrop-filter: blur(26px) saturate(170%); }} #newsTickerInner {{ display:inline-block; padding-left:100%; animation:tickerMove 60s linear infinite; font-weight:750; letter-spacing:0; text-shadow:0 1px 12px rgba(0,0,0,.34); }} .feed-page {{ width:100%; height:100%; display:grid; grid-template-rows:auto minmax(0, 1fr); gap:22px; padding:clamp(28px,4vw,56px); justify-content:center; position:relative; overflow:hidden; background:
 linear-gradient(135deg, rgba(34,197,94,.18), transparent 30%),
 radial-gradient(circle at top right, rgba(56,189,248,.2), transparent 26%),
 linear-gradient(180deg, #060c14, #0a1623 44%, #0e1d30 100%); }}
@@ -262,25 +262,25 @@ radial-gradient(circle at 18% 10%, rgba(255,255,255,.08), transparent 24%); }}
 .feed-page .feed-dots {{ display:flex; gap:10px; }}
 .feed-page .feed-dot {{ width:12px; height:12px; border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.12); }}
 .feed-page .feed-dot.active {{ background:#facc15; border-color:rgba(250,204,21,.6); box-shadow:0 0 0 5px rgba(250,204,21,.12); }}
-.feed-page .feed-grid {{ display:grid; grid-template-columns: 1.16fr .84fr; gap:20px; align-content:center; min-height:0; width:min(100%, 1500px); justify-self:center; }}
-.feed-page.layout-headline-list .feed-grid {{ grid-template-columns: 1fr; }}
-.feed-page.layout-headline-list .feed-card {{ padding:22px 24px; min-height:unset; }}
+.feed-page .feed-grid {{ display:grid; grid-template-columns: 1.16fr .84fr; grid-auto-rows:1fr; gap:20px; height:100%; min-height:0; width:min(100%, 1500px); justify-self:center; }}
+.feed-page.layout-headline-list .feed-grid {{ grid-template-columns: 1fr; grid-auto-rows:auto; height:auto; }}
+.feed-page.layout-headline-list .feed-card {{ padding:22px 24px; height:auto; min-height:unset; }}
 .feed-page.layout-compact .feed-grid {{ grid-template-columns: 1fr 1fr; gap:14px; }}
 .feed-page.layout-compact .feed-card {{ padding:18px 20px; border-radius:20px; min-height:200px; }}
 .feed-page.layout-compact .feed-card h3 {{ font-size:28px; }}
-.feed-card {{ background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.14); border-radius:24px; padding:22px; box-shadow:0 18px 38px rgba(0,0,0,.24); overflow:hidden; min-height:220px; display:grid; gap:14px; align-content:start; position:relative; backdrop-filter: blur(18px); }}
+.feed-card {{ background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.14); border-radius:24px; padding:22px; box-shadow:0 18px 38px rgba(0,0,0,.24); overflow:hidden; height:100%; min-height:0; display:grid; grid-template-rows:auto auto auto minmax(0,1fr) auto; gap:12px; position:relative; backdrop-filter: blur(18px); }}
 .feed-card::before {{ content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.05), transparent 22%, transparent 78%, rgba(255,255,255,.03)); }}
-.feed-card.lead {{ grid-row: span 2; background:linear-gradient(180deg, rgba(34,197,94,.18), rgba(255,255,255,.05)); border-color:rgba(34,197,94,.28); min-height:456px; }}
+.feed-card.lead {{ grid-row: span 2; background:linear-gradient(180deg, rgba(34,197,94,.18), rgba(255,255,255,.05)); border-color:rgba(34,197,94,.28); }}
 .feed-page.layout-headline-list .feed-card.lead,
 .feed-page.layout-compact .feed-card.lead {{ grid-row:auto; min-height:unset; }}
 .feed-card h3 {{ margin:0; font-size:28px; line-height:1.1; letter-spacing:-.04em; position:relative; z-index:1; }}
 .feed-card.lead h3 {{ font-size:44px; }}
 .feed-card p {{ margin:0; color:#cbd5e1; font-size:15px; opacity:.9; position:relative; z-index:1; }}
 .feed-card .feed-index {{ display:inline-flex; align-items:center; gap:8px; color:#fde68a; font-size:13px; letter-spacing:.16em; text-transform:uppercase; font-weight:900; position:relative; z-index:1; }}
-.feed-card .feed-story {{ color:#eff6ff; font-size:18px; line-height:1.3; opacity:.98; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; position:relative; z-index:1; min-height:0; }}
+.feed-card .feed-story {{ color:#eff6ff; font-size:18px; line-height:1.3; opacity:.98; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; position:relative; z-index:1; min-height:0; }}
 .feed-card.lead .feed-story {{ font-size:25px; -webkit-line-clamp:7; }}
 .feed-card:not(.lead) h3 {{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }}
-.feed-card-media {{ width:100%; height:150px; border-radius:18px; overflow:hidden; position:relative; z-index:1; background:rgba(255,255,255,.06); }}
+.feed-card-media {{ width:100%; height:clamp(70px, 15vh, 150px); border-radius:18px; overflow:hidden; position:relative; z-index:1; background:rgba(255,255,255,.06); }}
 .feed-card-media-bg {{ position:absolute; inset:-14px; background-size:cover; background-position:center; filter:blur(22px) brightness(.55) saturate(1.15); transform:scale(1.12); }}
 .feed-card-media img {{ position:relative; z-index:1; width:100%; height:100%; object-fit:contain; object-position:center; display:block; image-rendering:auto; background:none; }}
 .feed-card.lead .feed-card-media {{ height:300px; }}
@@ -342,13 +342,14 @@ linear-gradient(180deg, #02070d, #050f1c 48%, #081627 100%); }}
 .weather-icon-big {{ width:180px; height:180px; border-radius:44px; background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.05)); border:1px solid rgba(255,255,255,.18); display:grid; place-items:center; position:relative; box-shadow:0 30px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.1); animation: weatherIconFloat 5s ease-in-out infinite; }}
 @keyframes weatherIconFloat {{ 0%, 100% {{ transform:translateY(0); }} 50% {{ transform:translateY(-14px); }} }}
 .weather-icon-big.sun::before {{ content:''; width:76px; height:76px; border-radius:50%; background:radial-gradient(circle, #fde68a, #f59e0b 72%); box-shadow:0 0 0 22px rgba(250,204,21,.12), 0 0 60px rgba(250,204,21,.35); animation: weatherSunPulse 4s ease-in-out infinite; }}
-.weather-icon-big.cloud::before {{ content:''; position:absolute; width:96px; height:50px; border-radius:999px; background:#dbeafe; bottom:56px; box-shadow:-36px -18px 0 4px #dbeafe, 32px -22px 0 0 #dbeafe; }}
+.weather-icon-big.cloud::before {{ content:''; position:absolute; left:50%; bottom:54px; transform:translateX(-50%); width:104px; height:40px; border-radius:999px; background:#dbeafe; }}
+.weather-icon-big.cloud::after {{ content:''; position:absolute; left:50%; bottom:70px; transform:translateX(-58%); width:58px; height:58px; border-radius:50%; background:#dbeafe; }}
 .weather-icon-big.rain::before {{ content:''; position:absolute; width:96px; height:50px; border-radius:999px; background:#dbeafe; top:44px; box-shadow:-36px -18px 0 4px #dbeafe, 32px -22px 0 0 #dbeafe; }}
 .weather-icon-big.rain::after {{ content:''; position:absolute; width:78px; height:64px; bottom:28px; left:56px; background:
 linear-gradient(180deg, rgba(56,189,248,.9), rgba(56,189,248,0) 75%);
 clip-path: polygon(8% 0, 22% 0, 16% 100%, 0 100%, 8% 0, 40% 0, 54% 0, 48% 100%, 32% 100%, 40% 0, 72% 0, 86% 0, 80% 100%, 64% 100%, 72% 0); }}
 .weather-icon-big.partly::before {{ content:''; position:absolute; width:68px; height:68px; border-radius:50%; background:radial-gradient(circle, #fde68a, #f59e0b 72%); top:40px; left:34px; box-shadow:0 0 0 18px rgba(250,204,21,.12); }}
-.weather-icon-big.partly::after {{ content:''; position:absolute; width:90px; height:44px; border-radius:999px; background:#e2e8f0; bottom:50px; right:32px; box-shadow:-34px -18px 0 4px #e2e8f0, 26px -20px 0 0 #e2e8f0; }}
+.weather-icon-big.partly::after {{ content:''; position:absolute; width:34px; height:34px; border-radius:50%; background:#e2e8f0; bottom:46px; right:26px; box-shadow:-22px -6px 0 2px #e2e8f0, -40px 4px 0 -4px #e2e8f0, 14px -10px 0 -2px #e2e8f0; }}
 .weather-icon-big.moon::before {{ content:''; width:76px; height:76px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #fdfdf7, #e2e8dd 55%, #cbd5c9 100%); box-shadow:0 0 0 18px rgba(226,232,221,.1), 0 0 40px rgba(226,232,221,.3); }}
 .weather-page-kicker, .weather-city-big, .weather-cond-big, .weather-temp-big {{ text-shadow:0 2px 16px rgba(2,10,20,.55); }}
 .weather-temp-row {{ display:flex; align-items:flex-start; gap:6px; }}
@@ -376,8 +377,8 @@ body.portrait .feed-page .feed-hero {{ grid-template-columns:1fr; gap:18px; }}
 body.portrait .feed-page h1 {{ font-size:58px; max-width:none; }}
 body.portrait .feed-page .feed-sub {{ font-size:25px; max-width:none; }}
 body.portrait .feed-page .feed-header {{ grid-template-columns:1fr; gap:16px; }}
-body.portrait .feed-page .feed-grid {{ grid-template-columns: 1fr; gap:16px; }}
-body.portrait .feed-card {{ min-height:unset; }}
+body.portrait .feed-page .feed-grid {{ grid-template-columns: 1fr; grid-auto-rows:auto; gap:16px; height:auto; }}
+body.portrait .feed-card {{ height:auto; min-height:unset; }}
 body.portrait .feed-card.lead {{ min-height:unset; grid-row:auto; }}
 body.portrait .feed-card h3 {{ font-size:34px; }}
 body.portrait .feed-card.lead h3 {{ font-size:40px; }}
