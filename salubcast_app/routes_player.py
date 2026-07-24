@@ -136,7 +136,7 @@ def resolve_active_playlist_for_screen(screen: sqlite3.Row) -> dict[str, Any] | 
     if screen['insert_feed_pages'] == 1:
         orientation = screen['orientation'] or 'landscape'
         feed_limit = 9 if orientation == 'portrait' else 8
-        per_page = 3
+        per_page = 3 if orientation == 'portrait' else 2
         feed_name, feed_entries = get_feed_page_entries(screen['company_id'], feed_limit)
         weather_summary = weather_for_screen(screen)
         feed_pages = chunk_feed_entries(feed_entries, per_page, orientation) if feed_entries else []
@@ -270,7 +270,7 @@ radial-gradient(circle at 18% 10%, rgba(255,255,255,.08), transparent 24%); }}
 .feed-page.layout-compact .feed-card h3 {{ font-size:28px; }}
 .feed-card {{ background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.14); border-radius:24px; padding:22px; box-shadow:0 18px 38px rgba(0,0,0,.24); overflow:hidden; height:100%; min-height:0; display:grid; grid-template-rows:auto auto auto minmax(0,1fr) auto; gap:12px; position:relative; backdrop-filter: blur(18px); }}
 .feed-card::before {{ content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.05), transparent 22%, transparent 78%, rgba(255,255,255,.03)); }}
-.feed-card.lead {{ grid-row: span 2; background:linear-gradient(180deg, rgba(34,197,94,.18), rgba(255,255,255,.05)); border-color:rgba(34,197,94,.28); }}
+.feed-card.lead {{ background:linear-gradient(180deg, rgba(34,197,94,.18), rgba(255,255,255,.05)); border-color:rgba(34,197,94,.28); }}
 .feed-page.layout-headline-list .feed-card.lead,
 .feed-page.layout-compact .feed-card.lead {{ grid-row:auto; min-height:unset; }}
 .feed-card h3 {{ margin:0; font-size:28px; line-height:1.1; letter-spacing:-.04em; position:relative; z-index:1; }}
@@ -280,10 +280,10 @@ radial-gradient(circle at 18% 10%, rgba(255,255,255,.08), transparent 24%); }}
 .feed-card .feed-story {{ color:#eff6ff; font-size:18px; line-height:1.3; opacity:.98; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; position:relative; z-index:1; min-height:0; }}
 .feed-card.lead .feed-story {{ font-size:25px; -webkit-line-clamp:7; }}
 .feed-card:not(.lead) h3 {{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }}
-.feed-card-media {{ width:100%; height:clamp(70px, 15vh, 150px); border-radius:18px; overflow:hidden; position:relative; z-index:1; background:rgba(255,255,255,.06); }}
+.feed-card-media {{ width:100%; height:clamp(90px, 24vh, 280px); border-radius:18px; overflow:hidden; position:relative; z-index:1; background:rgba(255,255,255,.06); }}
 .feed-card-media-bg {{ position:absolute; inset:-14px; background-size:cover; background-position:center; filter:blur(22px) brightness(.55) saturate(1.15); transform:scale(1.12); }}
 .feed-card-media img {{ position:relative; z-index:1; width:100%; height:100%; object-fit:contain; object-position:center; display:block; image-rendering:auto; background:none; }}
-.feed-card.lead .feed-card-media {{ height:300px; }}
+.feed-card.lead .feed-card-media {{ height:clamp(140px, 36vh, 420px); }}
 .feed-page.layout-compact .feed-card-media {{ height:150px; }}
 .feed-page.layout-headline-list .feed-card-media {{ height:170px; }}
 .weather-page {{ width:100%; height:100%; position:relative; overflow:hidden; padding:clamp(28px,4vw,64px); display:grid; align-items:center; background-size:140% 140%; animation: weatherSkyShift 40s ease-in-out infinite; background:
