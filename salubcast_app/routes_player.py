@@ -119,8 +119,9 @@ def resolve_active_playlist_for_screen(screen: sqlite3.Row) -> dict[str, Any] | 
     company = fetch_one("SELECT * FROM companies WHERE id = ? LIMIT 1", (screen["company_id"],))
     if not company or company["is_active"] != 1:
         return {'screen': player_screen_payload(screen), 'blocked': True, 'items': []}
-    weekday = datetime.now().weekday()
-    now_str = datetime.now().strftime("%H:%M")
+    now_local = datetime.now(SCHEDULE_TZ)
+    weekday = now_local.weekday()
+    now_str = now_local.strftime("%H:%M")
     schedules = fetch_all("SELECT * FROM schedules WHERE screen_id = ? AND company_id = ? AND active = 1 ORDER BY priority ASC, start_time ASC", (screen['id'], screen['company_id']))
     chosen = None
     for sch in schedules:

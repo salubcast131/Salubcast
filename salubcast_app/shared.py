@@ -19,6 +19,9 @@ from datetime import datetime, timezone, timedelta
 from functools import wraps
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
+
+SCHEDULE_TZ = ZoneInfo("Europe/Amsterdam")
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from flask import (
